@@ -21,20 +21,25 @@ export const activity = defineType({
       name: 'tagline',
       title: 'Tagline',
       type: 'string',
-      description: 'Subtítulo curto — Ex: "Éveil musical, chant et instruments"',
+      description: 'Ex: "Éveil musical, chant et instruments"',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 4,
-      description: 'Texto longo exibido na página da atividade e nos cards',
+      description: 'Long text displayed on the activity page and on the cards.',
     }),
     defineField({
       name: 'image',
       title: 'Image',
       type: 'image',
       options: {hotspot: true},
+    }),
+    defineField({
+      name: 'highlightsTitle',
+      title: 'Highlights Title',
+      type: 'string',
     }),
     defineField({
       name: 'highlights',
