@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 type Props = {
   text: string;
@@ -27,24 +27,24 @@ export function LoadRevealText({
     return () => cancelAnimationFrame(id);
   }, []);
 
-  const words = text.split(" ");
+  const words = text.split(' ');
   let charIndex = -1;
 
   return (
-    <span className={className} aria-label={text}>
+    <span aria-label={text}>
       {words.map((word, wi) => (
         <span key={wi} aria-hidden>
           <span className="inline-block whitespace-nowrap">
-            {word.split("").map((char, ci) => {
+            {word.split('').map((char, ci) => {
               charIndex++;
               const delay = startDelay + charIndex * staggerMs;
               return (
                 <span
                   key={ci}
-                  className="inline-block"
+                  className={`inline-block${{ className }}`}
                   style={{
                     opacity: loaded ? 1 : 0,
-                    transform: loaded ? "translateY(0)" : "translateY(8px)",
+                    transform: loaded ? 'translateY(0)' : 'translateY(8px)',
                     transition: `opacity ${duration}ms ease-out, transform ${duration}ms ease-out`,
                     transitionDelay: `${delay}ms`,
                   }}
@@ -54,7 +54,7 @@ export function LoadRevealText({
               );
             })}
           </span>
-          {wi < words.length - 1 ? " " : null}
+          {wi < words.length - 1 ? ' ' : null}
         </span>
       ))}
     </span>
