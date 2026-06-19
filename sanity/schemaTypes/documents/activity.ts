@@ -21,12 +21,14 @@ export const activity = defineType({
       name: 'tagline',
       title: 'Tagline',
       type: 'string',
+      description: 'Subtítulo curto — Ex: "Éveil musical, chant et instruments"',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 4,
+      description: 'Texto longo exibido na página da atividade e nos cards',
     }),
     defineField({
       name: 'image',
@@ -39,7 +41,7 @@ export const activity = defineType({
       title: 'Highlights',
       type: 'array',
       of: [{type: 'string'}],
-      description: 'Up to 3 bullet points shown on the activity page',
+      description: 'Ex: "Cours individuels de 30 minutes par semaine"',
     }),
     defineField({
       name: 'scheduleItems',
