@@ -1,4 +1,5 @@
 import {aboutPage} from './documents/aboutPage'
+import {activitiesPage} from './documents/activitiesPage'
 import {activity} from './documents/activity'
 import {contactPage} from './documents/contactPage'
 import {homePage} from './documents/homePage'
@@ -7,6 +8,8 @@ import {siteSettings} from './documents/siteSettings'
 import {about} from './objects/about'
 import {contact} from './objects/contact'
 import {contactChannel} from './objects/contactChannel'
+import {footer} from './objects/footer'
+import {header} from './objects/header'
 import {hero} from './objects/hero'
 import {heroSlide} from './objects/heroSlide'
 import {navItem} from './objects/navItem'
@@ -20,6 +23,7 @@ export const schemaTypes = [
   // documents
   aboutPage,
   activity,
+  activitiesPage,
   contactPage,
   homePage,
   newsPost,
@@ -29,6 +33,8 @@ export const schemaTypes = [
   about,
   contact,
   contactChannel,
+  footer,
+  header,
   hero,
   heroSlide,
   navItem,

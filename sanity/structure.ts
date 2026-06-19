@@ -25,6 +25,12 @@ export const structure: StructureResolver = (S) =>
         .title('Contact Page')
         .icon(() => '✉️')
         .child(S.document().schemaType('contactPage').documentId('contactPage')),
+
+      S.listItem()
+        .title('Activities Page')
+        .icon(() => '🎨')
+        .child(S.document().schemaType('activitiesPage').documentId('activitiesPage')),
+
       S.divider(),
 
       // ── Collections ─────────────────────────────
