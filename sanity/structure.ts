@@ -31,6 +31,11 @@ export const structure: StructureResolver = (S) =>
         .icon(() => '🎨')
         .child(S.document().schemaType('activitiesPage').documentId('activitiesPage')),
 
+      S.listItem()
+        .title('Actualités Page')
+        .icon(() => '📰')
+        .child(S.document().schemaType('actualitesPage').documentId('actualitesPage')),
+
       S.divider(),
 
       // ── Collections ─────────────────────────────

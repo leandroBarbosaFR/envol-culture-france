@@ -1,6 +1,7 @@
 import {aboutPage} from './documents/aboutPage'
 import {activitiesPage} from './documents/activitiesPage'
 import {activity} from './documents/activity'
+import {actualitesPage} from './documents/actualitesPage'
 import {contactPage} from './documents/contactPage'
 import {homePage} from './documents/homePage'
 import {newsPost} from './documents/newsPost'
@@ -24,6 +25,7 @@ export const schemaTypes = [
   aboutPage,
   activity,
   activitiesPage,
+  actualitesPage,
   contactPage,
   homePage,
   newsPost,
