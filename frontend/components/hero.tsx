@@ -96,11 +96,13 @@ export function Hero({ data }: { data?: HeroData }) {
   const secondaryLabel = data?.secondaryButtonLabel ?? 'En savoir plus';
   const secondaryUrl = data?.secondaryButtonUrl ?? '/about';
   const slides: Slide[] =
-    data?.slides?.map((s) => ({
-      src: s.image.asset.url,
-      alt: s.alt,
-      caption: s.caption,
-    })) ?? [];
+    data?.slides
+      ?.filter((s) => s.image?.asset?.url)
+      .map((s) => ({
+        src: s.image.asset.url,
+        alt: s.alt ?? '',
+        caption: s.caption ?? '',
+      })) ?? [];
 
   const [plugins] = useState(() => [
     Autoplay({
@@ -211,15 +213,17 @@ export function Hero({ data }: { data?: HeroData }) {
               </Link>
             </Reveal>
 
-            <div className="mt-10 flex items-center gap-4">
-              <div className="flex-1 max-w-xs">
-                <ProgressBar key={current} duration={SLIDE_DURATION_MS} />
+            {slides.length > 0 && (
+              <div className="mt-10 flex items-center gap-4">
+                <div className="flex-1 max-w-xs">
+                  <ProgressBar key={current} duration={SLIDE_DURATION_MS} />
+                </div>
+                <span className="text-xs uppercase tracking-[0.18em] text-white/65">
+                  {String(current + 1).padStart(2, '0')} /{' '}
+                  {String(slides.length).padStart(2, '0')}
+                </span>
               </div>
-              <span className="text-xs uppercase tracking-[0.18em] text-white/65">
-                {String(current + 1).padStart(2, '0')} /{' '}
-                {String(slides.length).padStart(2, '0')}
-              </span>
-            </div>
+            )}
           </div>
         </div>
       </div>

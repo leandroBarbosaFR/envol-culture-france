@@ -1,52 +1,51 @@
-// sanity/schemaTypes/objects/hero.ts
 import {defineType, defineField} from 'sanity'
 
-export const hero = defineType({
-  name: 'hero',
+export const heroSection = defineType({
+  name: 'heroSection',
   title: 'Hero',
-  type: 'object',
+  type: 'document',
   fields: [
     defineField({
       name: 'titleLine1',
-      title: 'Title — Line 1',
+      title: 'Titre — Ligne 1',
       type: 'string',
       description: 'Ex: "Laissez votre créativité"',
     }),
     defineField({
       name: 'titleLine2',
-      title: 'Title — Line 2 (gradient)',
+      title: 'Titre — Ligne 2 (gradient)',
       type: 'string',
-      description: 'Ex: "s\'exprimer"',
+      description: "Ex: \"s'exprimer\"",
     }),
     defineField({
       name: 'subtitle',
-      title: 'Subtitle',
+      title: 'Sous-titre',
       type: 'text',
       rows: 3,
     }),
     defineField({
       name: 'primaryButtonLabel',
-      title: 'Primary Button — Label',
+      title: 'Bouton principal — Libellé',
       type: 'string',
     }),
     defineField({
       name: 'primaryButtonUrl',
-      title: 'Primary Button — URL',
+      title: 'Bouton principal — URL',
       type: 'string',
     }),
     defineField({
       name: 'secondaryButtonLabel',
-      title: 'Secondary Button — Label',
+      title: 'Bouton secondaire — Libellé',
       type: 'string',
     }),
     defineField({
       name: 'secondaryButtonUrl',
-      title: 'Secondary Button — URL',
+      title: 'Bouton secondaire — URL',
       type: 'string',
     }),
     defineField({
       name: 'slides',
-      title: 'Slides',
+      title: 'Diapositives',
       type: 'array',
       of: [{type: 'heroSlide'}],
     }),

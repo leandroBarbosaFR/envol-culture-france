@@ -3,10 +3,10 @@ import {defineType, defineField} from 'sanity'
 
 export const navItem = defineType({
   name: 'navItem',
-  title: 'Navigation Item',
+  title: 'Élément de navigation',
   type: 'object',
   fields: [
-    defineField({name: 'label', title: 'Label', type: 'string'}),
+    defineField({name: 'label', title: 'Libellé', type: 'string'}),
     defineField({name: 'href', title: 'URL', type: 'string'}),
   ],
   preview: {

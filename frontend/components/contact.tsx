@@ -46,7 +46,7 @@ const CHANNEL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
   Permanence: Clock,
 };
 
-type Channel = { label: string; value: string; href: string };
+type Channel = { label: string; value: string; href?: string };
 type Social = { platform: string; href: string };
 
 type ContactData = {
@@ -123,22 +123,27 @@ export function Contact({ data }: { data?: ContactData }) {
           <ul className="grid gap-3 md:col-span-6">
             {channels.map(({ label, value, href }) => {
               const Icon = CHANNEL_ICONS[label] ?? Mail;
+              const inner = (
+                <>
+                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      {label}
+                    </div>
+                    <div className="mt-0.5 font-medium">{value}</div>
+                  </div>
+                </>
+              );
+              const cls = "flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/60";
               return (
                 <li key={label}>
-                  <a
-                    href={href}
-                    className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/60"
-                  >
-                    <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
-                      <Icon className="h-5 w-5" />
-                    </span>
-                    <div>
-                      <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                        {label}
-                      </div>
-                      <div className="mt-0.5 font-medium">{value}</div>
-                    </div>
-                  </a>
+                  {href ? (
+                    <a href={href} className={cls}>{inner}</a>
+                  ) : (
+                    <div className={cls}>{inner}</div>
+                  )}
                 </li>
               );
             })}

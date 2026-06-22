@@ -54,14 +54,16 @@ export function Activities({
                 href={`/activites/${activity.slug}`}
                 className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card"
               >
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={activity.image.asset.url}
-                    alt={activity.name}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover"
-                  />
+                <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                  {activity.image?.asset?.url && (
+                    <Image
+                      src={activity.image.asset.url}
+                      alt={activity.name}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  )}
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-5">
                   <h3 className="font-medium">{activity.name}</h3>

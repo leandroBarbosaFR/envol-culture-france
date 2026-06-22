@@ -1,37 +1,36 @@
-// sanity/schemaTypes/objects/about.ts
 import {defineType, defineField} from 'sanity'
 
-export const about = defineType({
-  name: 'about',
-  title: 'About Section',
-  type: 'object',
+export const homeAboutSection = defineType({
+  name: 'homeAboutSection',
+  title: 'Section À propos (Accueil)',
+  type: 'document',
   fields: [
     defineField({
       name: 'eyebrow',
-      title: 'Eyebrow',
+      title: 'Surtitre',
       type: 'string',
       description: 'Ex: "Qui sommes-nous"',
     }),
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titre',
       type: 'string',
     }),
     defineField({
       name: 'paragraph1',
-      title: 'Paragraph 1',
+      title: 'Paragraphe 1',
       type: 'text',
       rows: 4,
     }),
     defineField({
       name: 'paragraph2',
-      title: 'Paragraph 2',
+      title: 'Paragraphe 2',
       type: 'text',
       rows: 4,
     }),
     defineField({
       name: 'values',
-      title: 'Values',
+      title: 'Valeurs',
       type: 'array',
       of: [{type: 'valueItem'}],
     }),

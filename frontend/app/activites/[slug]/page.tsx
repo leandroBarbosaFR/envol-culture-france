@@ -81,23 +81,25 @@ export default async function ActivityPage({
               )}
             </div>
           </div>
-          <div className="md:col-span-5">
-            <h2 className="text-2xl font-semibold tracking-tight">
-              Ce qu&apos;il faut savoir
-            </h2>
-            <ul className="mt-5 space-y-3">
-              {activity.highlights?.map((h: string) => (
-                <li key={h} className="flex gap-3 text-sm">
-                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand-soft text-brand-deep">
-                    <Check className="h-3.5 w-3.5" />
-                  </span>
-                  <span className="text-muted-foreground leading-relaxed">
-                    {h}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {activity.highlights?.length > 0 && (
+            <div className="md:col-span-5">
+              <h2 className="text-2xl font-semibold tracking-tight">
+                Ce qu&apos;il faut savoir
+              </h2>
+              <ul className="mt-5 space-y-3">
+                {activity.highlights.map((h: string) => (
+                  <li key={h} className="flex gap-3 text-sm">
+                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand-soft text-brand-deep">
+                      <Check className="h-3.5 w-3.5" />
+                    </span>
+                    <span className="text-muted-foreground leading-relaxed">
+                      {h}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </section>
 

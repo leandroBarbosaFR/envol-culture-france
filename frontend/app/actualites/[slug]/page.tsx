@@ -14,7 +14,7 @@ type OtherPost = {
   slug: string;
   title: string;
   date: string;
-  image: { asset: { url: string } };
+  image?: { asset?: { url?: string } };
 };
 
 export async function generateStaticParams(): Promise<Params[]> {
@@ -48,7 +48,7 @@ export default async function ActualitePage({
   return (
     <>
       <PageHeader
-        eyebrow={`${post.category} · ${post.date}`}
+        eyebrow={post.category ? `${post.category} · ${post.date}` : post.date}
         title={post.title}
         description={post.excerpt}
         crumbs={[
@@ -72,9 +72,11 @@ export default async function ActualitePage({
             </div>
           )}
 
-          <div className="prose prose-neutral max-w-none">
-            <PortableText value={post.body} />
-          </div>
+          {post.body && (
+            <div className="prose prose-neutral max-w-none">
+              <PortableText value={post.body} />
+            </div>
+          )}
 
           <div className="mt-12 border-t border-border pt-8">
             <Link
@@ -102,13 +104,15 @@ export default async function ActualitePage({
                     className="group flex gap-4 rounded-xl border border-border bg-card p-4 transition hover:border-primary/60"
                   >
                     <div className="relative aspect-square w-24 shrink-0 overflow-hidden rounded-xl bg-muted">
-                      <Image
-                        src={other.image.asset.url}
-                        alt={other.title}
-                        fill
-                        sizes="96px"
-                        className="object-cover"
-                      />
+                      {other.image?.asset?.url && (
+                        <Image
+                          src={other.image.asset.url}
+                          alt={other.title}
+                          fill
+                          sizes="96px"
+                          className="object-cover"
+                        />
+                      )}
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs text-muted-foreground">

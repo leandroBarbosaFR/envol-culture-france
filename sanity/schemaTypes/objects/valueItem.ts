@@ -3,17 +3,17 @@ import {defineType, defineField} from 'sanity'
 
 export const valueItem = defineType({
   name: 'valueItem',
-  title: 'Value Item',
+  title: 'Valeur',
   type: 'object',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titre',
       type: 'string',
     }),
     defineField({
       name: 'body',
-      title: 'Body',
+      title: 'Contenu',
       type: 'text',
       rows: 3,
     }),

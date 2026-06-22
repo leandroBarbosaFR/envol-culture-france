@@ -10,8 +10,8 @@ const ICONS = [Heart, Users, Sparkles, Award];
 export async function generateMetadata(): Promise<Metadata> {
   const data = await client.fetch(aboutPageQuery);
   return {
-    title: `${data?.title} · Envol Culture en France`,
-    description: data?.description,
+    title: `${data?.intro?.title ?? 'Qui sommes-nous'} · Envol Culture en France`,
+    description: data?.intro?.description,
   };
 }
 
@@ -21,9 +21,9 @@ export default async function AboutPage() {
   return (
     <>
       <PageHeader
-        eyebrow={data?.eyebrow}
-        title={data?.title}
-        description={data?.description}
+        eyebrow={data?.intro?.eyebrow}
+        title={data?.intro?.title}
+        description={data?.intro?.description}
         crumbs={[{ href: '/about', label: 'Qui sommes-nous' }]}
       />
 
@@ -31,9 +31,9 @@ export default async function AboutPage() {
         <div className="mx-auto grid max-w-6xl gap-12 px-4 py-20 md:grid-cols-12 md:px-6 md:py-24">
           <div className="md:col-span-6">
             <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border bg-muted shadow-xl shadow-primary/10">
-              {data?.missionImage?.asset?.url && (
+              {data?.intro?.missionImage?.asset?.url && (
                 <Image
-                  src={data.missionImage.asset.url}
+                  src={data.intro.missionImage.asset.url}
                   alt="Atelier collectif"
                   fill
                   sizes="(min-width: 768px) 50vw, 100vw"
@@ -44,13 +44,13 @@ export default async function AboutPage() {
           </div>
           <div className="md:col-span-6">
             <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-              {data?.missionTitle}
+              {data?.intro?.missionTitle}
             </h2>
             <p className="mt-4 text-muted-foreground leading-relaxed">
-              {data?.missionParagraph1}
+              {data?.intro?.missionParagraph1}
             </p>
             <p className="mt-4 text-muted-foreground leading-relaxed">
-              {data?.missionParagraph2}
+              {data?.intro?.missionParagraph2}
             </p>
 
             <dl className="mt-8 grid grid-cols-3 gap-6 border-t border-border pt-6">
@@ -71,13 +71,14 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {data?.values?.values?.length > 0 && (
       <section className="bg-brand-soft/40">
         <div className="mx-auto max-w-6xl px-4 py-20 md:px-6 md:py-24">
           <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-            {data?.valuesTitle}
+            {data?.values?.valuesTitle}
           </h2>
           <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-            {data?.values?.map(
+            {data?.values?.values?.map(
               (
                 { title, body }: { title: string; body: string },
                 index: number,
@@ -104,6 +105,7 @@ export default async function AboutPage() {
           </ul>
         </div>
       </section>
+      )}
     </>
   );
 }

@@ -17,7 +17,7 @@ type Activity = {
 export async function generateMetadata(): Promise<Metadata> {
   const data = await client.fetch(activitiesPageQuery);
   return {
-    title: `${data?.title} · Envol Culture en France`,
+    title: `${data?.title ?? 'Activités'} · Envol Culture en France`,
     description: data?.description,
   };
 }
@@ -43,15 +43,17 @@ export default async function ActivitesPage() {
                   href={`/activites/${activity.slug}`}
                   className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/15"
                 >
-                  <div className="relative aspect-[16/10] overflow-hidden">
-                    <Image
-                      src={activity.image.asset.url}
-                      alt={activity.name}
-                      fill
-                      sizes="(min-width: 768px) 50vw, 100vw"
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                      priority
-                    />
+                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                    {activity.image?.asset?.url && (
+                      <Image
+                        src={activity.image.asset.url}
+                        alt={activity.name}
+                        fill
+                        sizes="(min-width: 768px) 50vw, 100vw"
+                        className="object-cover transition duration-500 group-hover:scale-105"
+                        priority
+                      />
+                    )}
                   </div>
                   <div className="flex flex-1 flex-col gap-3 p-6">
                     <div className="flex items-start justify-between gap-3">

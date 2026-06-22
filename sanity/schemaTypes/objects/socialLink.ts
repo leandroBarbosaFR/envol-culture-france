@@ -3,12 +3,12 @@ import {defineType, defineField} from 'sanity'
 
 export const socialLink = defineType({
   name: 'socialLink',
-  title: 'Social Link',
+  title: 'Réseau social',
   type: 'object',
   fields: [
     defineField({
       name: 'platform',
-      title: 'Platform',
+      title: 'Plateforme',
       type: 'string',
       options: {
         list: [

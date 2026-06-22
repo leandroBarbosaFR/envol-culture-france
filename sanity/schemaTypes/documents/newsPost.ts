@@ -3,12 +3,12 @@ import {defineType, defineField} from 'sanity'
 
 export const newsPost = defineType({
   name: 'newsPost',
-  title: 'News Post',
+  title: 'Actualité',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titre',
       type: 'string',
     }),
     defineField({
@@ -25,7 +25,7 @@ export const newsPost = defineType({
     }),
     defineField({
       name: 'category',
-      title: 'Category',
+      title: 'Catégorie',
       type: 'string',
       options: {
         list: [
@@ -37,20 +37,20 @@ export const newsPost = defineType({
     }),
     defineField({
       name: 'excerpt',
-      title: 'Excerpt',
+      title: 'Extrait',
       type: 'text',
       rows: 3,
     }),
     defineField({
       name: 'body',
-      title: 'Body',
+      title: 'Contenu',
       type: 'array',
       of: [{type: 'block'}],
-      description: 'Full article content',
+      description: 'Contenu complet de l\'article',
     }),
     defineField({
       name: 'image',
-      title: 'Cover Image',
+      title: 'Image de couverture',
       type: 'image',
       options: {hotspot: true},
     }),

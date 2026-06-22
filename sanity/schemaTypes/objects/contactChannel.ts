@@ -3,18 +3,18 @@ import {defineType, defineField} from 'sanity'
 
 export const contactChannel = defineType({
   name: 'contactChannel',
-  title: 'Contact Channel',
+  title: 'Canal de contact',
   type: 'object',
   fields: [
     defineField({
       name: 'label',
-      title: 'Label',
+      title: 'Libellé',
       type: 'string',
       description: 'Ex: "Email", "Téléphone", "Adresse"',
     }),
     defineField({
       name: 'value',
-      title: 'Value',
+      title: 'Valeur',
       type: 'string',
       description: 'Ex: "contact@envol-culture.fr"',
     }),

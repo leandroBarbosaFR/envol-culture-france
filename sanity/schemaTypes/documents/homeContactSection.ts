@@ -1,20 +1,19 @@
-// sanity/schemaTypes/objects/contact.ts
 import {defineType, defineField} from 'sanity'
 
-export const contact = defineType({
-  name: 'contact',
-  title: 'Contact Section',
-  type: 'object',
+export const homeContactSection = defineType({
+  name: 'homeContactSection',
+  title: 'Section Contact (Accueil)',
+  type: 'document',
   fields: [
     defineField({
       name: 'eyebrow',
-      title: 'Eyebrow',
+      title: 'Surtitre',
       type: 'string',
       description: 'Ex: "Nous contacter"',
     }),
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titre',
       type: 'string',
     }),
     defineField({
@@ -25,34 +24,34 @@ export const contact = defineType({
     }),
     defineField({
       name: 'primaryButtonLabel',
-      title: 'Primary Button — Label',
+      title: 'Bouton principal — Libellé',
       type: 'string',
     }),
     defineField({
       name: 'primaryButtonUrl',
-      title: 'Primary Button — URL',
+      title: 'Bouton principal — URL',
       type: 'string',
     }),
     defineField({
       name: 'secondaryButtonLabel',
-      title: 'Secondary Button — Label',
+      title: 'Bouton secondaire — Libellé',
       type: 'string',
     }),
     defineField({
       name: 'secondaryButtonUrl',
-      title: 'Secondary Button — URL',
+      title: 'Bouton secondaire — URL',
       type: 'string',
     }),
     defineField({
       name: 'channels',
-      title: 'Contact Channels',
+      title: 'Canaux de contact',
       type: 'array',
       of: [{type: 'contactChannel'}],
-      description: 'Email, phone, address',
+      description: 'Email, téléphone, adresse',
     }),
     defineField({
       name: 'socials',
-      title: 'Social Links',
+      title: 'Réseaux sociaux',
       type: 'array',
       of: [{type: 'socialLink'}],
     }),

@@ -3,7 +3,7 @@ import {defineType, defineField} from 'sanity'
 
 export const heroSlide = defineType({
   name: 'heroSlide',
-  title: 'Hero Slide',
+  title: 'Diapositive',
   type: 'object',
   fields: [
     defineField({
@@ -14,12 +14,12 @@ export const heroSlide = defineType({
     }),
     defineField({
       name: 'alt',
-      title: 'Alt Text',
+      title: 'Texte alternatif',
       type: 'string',
     }),
     defineField({
       name: 'caption',
-      title: 'Caption',
+      title: 'Légende',
       type: 'string',
       description: 'Ex: "Musique"',
     }),

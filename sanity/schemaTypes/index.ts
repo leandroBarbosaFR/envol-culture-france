@@ -1,17 +1,21 @@
-import {aboutPage} from './documents/aboutPage'
+import {aboutPageIntro} from './documents/aboutPageIntro'
+import {aboutPageStats} from './documents/aboutPageStats'
+import {aboutPageValues} from './documents/aboutPageValues'
 import {activitiesPage} from './documents/activitiesPage'
 import {activity} from './documents/activity'
 import {actualitesPage} from './documents/actualitesPage'
-import {contactPage} from './documents/contactPage'
-import {homePage} from './documents/homePage'
+import {contactPageForm} from './documents/contactPageForm'
+import {contactPageInfo} from './documents/contactPageInfo'
+import {heroSection} from './documents/heroSection'
+import {homeAboutSection} from './documents/homeAboutSection'
+import {homeActivitiesSection} from './documents/homeActivitiesSection'
+import {homeContactSection} from './documents/homeContactSection'
+import {homeNewsSection} from './documents/homeNewsSection'
 import {newsPost} from './documents/newsPost'
-import {siteSettings} from './documents/siteSettings'
-import {about} from './objects/about'
-import {contact} from './objects/contact'
+import {pageSeo} from './documents/pageSeo'
+import {siteFooter} from './documents/siteFooter'
+import {siteHeader} from './documents/siteHeader'
 import {contactChannel} from './objects/contactChannel'
-import {footer} from './objects/footer'
-import {header} from './objects/header'
-import {hero} from './objects/hero'
 import {heroSlide} from './objects/heroSlide'
 import {navItem} from './objects/navItem'
 import {scheduleItem} from './objects/scheduleItem'
@@ -21,23 +25,37 @@ import {tarifItem} from './objects/tarifItem'
 import {valueItem} from './objects/valueItem'
 
 export const schemaTypes = [
-  // documents
-  aboutPage,
-  activity,
+  // documents — home sections
+  heroSection,
+  homeAboutSection,
+  homeActivitiesSection,
+  homeContactSection,
+  homeNewsSection,
+
+  // documents — about sections
+  aboutPageIntro,
+  aboutPageStats,
+  aboutPageValues,
+
+  // documents — contact sections
+  contactPageInfo,
+  contactPageForm,
+
+  // documents — other pages
   activitiesPage,
   actualitesPage,
-  contactPage,
-  homePage,
+
+  // documents — collections
+  activity,
   newsPost,
-  siteSettings,
+
+  // documents — global
+  pageSeo,
+  siteFooter,
+  siteHeader,
 
   // objects
-  about,
-  contact,
   contactChannel,
-  footer,
-  header,
-  hero,
   heroSlide,
   navItem,
   scheduleItem,

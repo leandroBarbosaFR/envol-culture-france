@@ -1,38 +1,46 @@
 import { groq } from 'next-sanity';
 
-// ── Site Settings ────────────────────────────────────────────────────────────
-export const siteSettingsQuery = groq`
-  *[_type == "siteSettings"][0] {
-    seoTitle,
-    seoDescription,
-    header {
-      siteName,
-      navLinks,
-      primaryButtonLabel,
-      primaryButtonUrl,
-      secondaryButtonLabel,
-      secondaryButtonUrl,
-    },
-    footer {
-      siteName,
-      tagline,
-      navColumnTitle,
-      navLinks,
-      memberColumnTitle,
-      memberLinks,
-      copyright,
-      legalLabel,
-      legalUrl,
-      privacyLabel,
-      privacyUrl,
-    }
+// ── Site Header ──────────────────────────────────────────────────────────────
+export const siteHeaderQuery = groq`
+  *[_type == "siteHeader"][0] {
+    siteName,
+    navLinks,
+    primaryButtonLabel,
+    primaryButtonUrl,
+    secondaryButtonLabel,
+    secondaryButtonUrl,
+  }
+`;
+
+// ── Site Footer ──────────────────────────────────────────────────────────────
+export const siteFooterQuery = groq`
+  *[_type == "siteFooter"][0] {
+    siteName,
+    tagline,
+    navColumnTitle,
+    navLinks,
+    memberColumnTitle,
+    memberLinks,
+    copyright,
+    legalLabel,
+    legalUrl,
+    privacyLabel,
+    privacyUrl,
+  }
+`;
+
+// ── SEO Global ───────────────────────────────────────────────────────────────
+export const seoGlobalQuery = groq`
+  *[_type == "pageSeo" && _id == "seoGlobal"][0] {
+    metaTitle,
+    metaDescription,
   }
 `;
 
 // ── Home Page ────────────────────────────────────────────────────────────────
 export const homePageQuery = groq`
-  *[_type == "homePage"][0] {
-    hero {
+  {
+    "hero": *[_type == "heroSection"][0] {
       titleLine1,
       titleLine2,
       subtitle,
@@ -46,20 +54,24 @@ export const homePageQuery = groq`
         image { asset->{ url } }
       }
     },
-    about {
+    "about": *[_type == "homeAboutSection"][0] {
       eyebrow,
       title,
       paragraph1,
       paragraph2,
       values[] { title, body }
     },
-    activitiesEyebrow,
-    activitiesTitle,
-    activitiesLinkLabel,
-    newsEyebrow,
-    newsTitle,
-    newsLinkLabel,
-    contact {
+    "activitiesIntro": *[_type == "homeActivitiesSection"][0] {
+      eyebrow,
+      title,
+      linkLabel,
+    },
+    "newsIntro": *[_type == "homeNewsSection"][0] {
+      eyebrow,
+      title,
+      linkLabel,
+    },
+    "contact": *[_type == "homeContactSection"][0] {
       eyebrow,
       title,
       description,
@@ -90,17 +102,21 @@ export const homePageQuery = groq`
 
 // ── About Page ───────────────────────────────────────────────────────────────
 export const aboutPageQuery = groq`
-  *[_type == "aboutPage"][0] {
-    eyebrow,
-    title,
-    description,
-    missionImage { asset->{ url } },
-    missionTitle,
-    missionParagraph1,
-    missionParagraph2,
-    stats[] { value, label },
-    valuesTitle,
-    values[] { title, body }
+  {
+    "intro": *[_type == "aboutPageIntro"][0] {
+      eyebrow,
+      title,
+      description,
+      missionImage { asset->{ url } },
+      missionTitle,
+      missionParagraph1,
+      missionParagraph2,
+    },
+    "stats": *[_type == "aboutPageStats"][0].stats[] { value, label },
+    "values": *[_type == "aboutPageValues"][0] {
+      valuesTitle,
+      values[] { title, body }
+    }
   }
 `;
 
@@ -194,14 +210,18 @@ export const newsSlugsQuery = groq`
 
 // ── Contact Page ─────────────────────────────────────────────────────────────
 export const contactPageQuery = groq`
-  *[_type == "contactPage"][0] {
-    eyebrow,
-    title,
-    description,
-    coordinatesTitle,
-    channels[] { label, value, href },
-    formTitle,
-    formSubtitle
+  {
+    "info": *[_type == "contactPageInfo"][0] {
+      eyebrow,
+      title,
+      description,
+      coordinatesTitle,
+      channels[] { label, value, href }
+    },
+    "form": *[_type == "contactPageForm"][0] {
+      formTitle,
+      formSubtitle
+    }
   }
 `;
 

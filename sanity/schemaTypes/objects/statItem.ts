@@ -3,18 +3,18 @@ import {defineType, defineField} from 'sanity'
 
 export const statItem = defineType({
   name: 'statItem',
-  title: 'Stat Item',
+  title: 'Statistique',
   type: 'object',
   fields: [
     defineField({
       name: 'value',
-      title: 'Value',
+      title: 'Valeur',
       type: 'string',
       description: 'Ex: "25+" ou "100%"',
     }),
     defineField({
       name: 'label',
-      title: 'Label',
+      title: 'Libellé',
       type: 'string',
       description: 'Ex: "créneaux / semaine"',
     }),

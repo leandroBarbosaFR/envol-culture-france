@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { client } from '@/lib/sanity/client';
-import { siteSettingsQuery } from '@/lib/sanity/queries';
+import { siteHeaderQuery, siteFooterQuery, seoGlobalQuery } from '@/lib/sanity/queries';
 import './globals.css';
 
 const geistSans = Geist({
@@ -17,10 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await client.fetch(siteSettingsQuery);
+  const seo = await client.fetch(seoGlobalQuery);
   return {
-    title: settings?.seoTitle ?? 'Envol Culture en France',
-    description: settings?.seoDescription ?? '',
+    title: seo?.metaTitle ?? 'Envol Culture en France',
+    description: seo?.metaDescription ?? '',
   };
 }
 
@@ -29,7 +29,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await client.fetch(siteSettingsQuery);
+  const [header, footer] = await Promise.all([
+    client.fetch(siteHeaderQuery),
+    client.fetch(siteFooterQuery),
+  ]);
 
   return (
     <html
@@ -37,9 +40,9 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <SiteHeader header={settings?.header} />
+        <SiteHeader header={header} />
         <main className="flex-1">{children}</main>
-        <SiteFooter footer={settings?.footer} />
+        <SiteFooter footer={footer} />
       </body>
     </html>
   );

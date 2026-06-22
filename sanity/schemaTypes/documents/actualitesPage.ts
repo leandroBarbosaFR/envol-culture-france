@@ -3,18 +3,18 @@ import {defineType, defineField} from 'sanity'
 
 export const actualitesPage = defineType({
   name: 'actualitesPage',
-  title: 'Actualités Page',
+  title: 'Page Actualités',
   type: 'document',
   fields: [
     defineField({
       name: 'eyebrow',
-      title: 'Eyebrow',
+      title: 'Surtitre',
       type: 'string',
       description: 'Ex: "Nos actualités"',
     }),
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titre',
       type: 'string',
     }),
     defineField({

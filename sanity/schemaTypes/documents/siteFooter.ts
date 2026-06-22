@@ -1,75 +1,74 @@
-// sanity/schemaTypes/objects/footer.ts
 import {defineType, defineField} from 'sanity'
 
-export const footer = defineType({
-  name: 'footer',
-  title: 'Footer',
-  type: 'object',
+export const siteFooter = defineType({
+  name: 'siteFooter',
+  title: 'Pied de page',
+  type: 'document',
   fields: [
     defineField({
       name: 'siteName',
-      title: 'Site Name',
+      title: 'Nom du site',
       type: 'string',
       description: 'Ex: "Envol Culture"',
     }),
     defineField({
       name: 'tagline',
-      title: 'Tagline',
+      title: 'Accroche',
       type: 'text',
       rows: 2,
       description: 'Ex: "Association loi 1901 — acteur du développement..."',
     }),
     defineField({
       name: 'navColumnTitle',
-      title: 'Navigation Column Title',
+      title: 'Titre colonne navigation',
       type: 'string',
       description: 'Ex: "Navigation"',
     }),
     defineField({
       name: 'navLinks',
-      title: 'Navigation Links',
+      title: 'Liens de navigation',
       type: 'array',
       of: [{type: 'navItem'}],
     }),
     defineField({
       name: 'memberColumnTitle',
-      title: 'Member Column Title',
+      title: "Titre colonne espace adhérent",
       type: 'string',
       description: 'Ex: "Espace adhérent"',
     }),
     defineField({
       name: 'memberLinks',
-      title: 'Member Links',
+      title: "Liens espace adhérent",
       type: 'array',
       of: [{type: 'navItem'}],
       description: "Se connecter + S'inscrire",
     }),
     defineField({
       name: 'copyright',
-      title: 'Copyright Text',
+      title: 'Texte copyright',
       type: 'string',
       description: 'Ex: "Envol — Association loi 1901"',
     }),
     defineField({
       name: 'legalLabel',
-      title: 'Legal Link — Label',
+      title: 'Mentions légales — Libellé',
       type: 'string',
       description: 'Ex: "Mentions légales"',
     }),
     defineField({
       name: 'legalUrl',
-      title: 'Legal Link — URL',
+      title: 'Mentions légales — URL',
       type: 'string',
     }),
     defineField({
       name: 'privacyLabel',
-      title: 'Privacy Link — Label',
+      title: 'Politique de confidentialité — Libellé',
       type: 'string',
       description: 'Ex: "Politique de confidentialité"',
     }),
     defineField({
       name: 'privacyUrl',
-      title: 'Privacy Link — URL',
+      title: 'Politique de confidentialité — URL',
       type: 'string',
     }),
   ],

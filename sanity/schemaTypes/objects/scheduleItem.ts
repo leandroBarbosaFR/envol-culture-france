@@ -3,18 +3,18 @@ import {defineType, defineField} from 'sanity'
 
 export const scheduleItem = defineType({
   name: 'scheduleItem',
-  title: 'Schedule Item',
+  title: 'Créneau',
   type: 'object',
   fields: [
     defineField({
       name: 'activity',
-      title: 'Course Name',
+      title: 'Nom du cours',
       type: 'string',
       description: 'Ex: "Danse : Classique"',
     }),
     defineField({
       name: 'day',
-      title: 'Day',
+      title: 'Jour',
       type: 'string',
       options: {
         list: [
@@ -30,24 +30,24 @@ export const scheduleItem = defineType({
     }),
     defineField({
       name: 'time',
-      title: 'Time',
+      title: 'Heure',
       type: 'string',
       description: 'Ex: "17h00 – 21h00"',
     }),
     defineField({
       name: 'duration',
-      title: 'Duration',
+      title: 'Durée',
       type: 'string',
       description: 'Ex: "1h15 ou 1h30"',
     }),
     defineField({
       name: 'place',
-      title: 'Place',
+      title: 'Lieu',
       type: 'string',
     }),
     defineField({
       name: 'teacher',
-      title: 'Teacher',
+      title: 'Professeur(e)',
       type: 'string',
     }),
   ],

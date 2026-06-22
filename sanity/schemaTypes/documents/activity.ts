@@ -3,12 +3,12 @@ import {defineType, defineField} from 'sanity'
 
 export const activity = defineType({
   name: 'activity',
-  title: 'Activity',
+  title: 'Activité',
   type: 'document',
   fields: [
     defineField({
       name: 'name',
-      title: 'Name',
+      title: 'Nom',
       type: 'string',
     }),
     defineField({
@@ -19,7 +19,7 @@ export const activity = defineType({
     }),
     defineField({
       name: 'tagline',
-      title: 'Tagline',
+      title: 'Accroche',
       type: 'string',
       description: 'Ex: "Éveil musical, chant et instruments"',
     }),
@@ -28,7 +28,7 @@ export const activity = defineType({
       title: 'Description',
       type: 'text',
       rows: 4,
-      description: 'Long text displayed on the activity page and on the cards.',
+      description: 'Texte affiché sur la page et les cartes activité.',
     }),
     defineField({
       name: 'image',
@@ -38,19 +38,19 @@ export const activity = defineType({
     }),
     defineField({
       name: 'highlightsTitle',
-      title: 'Highlights Title',
+      title: 'Points forts — Titre',
       type: 'string',
     }),
     defineField({
       name: 'highlights',
-      title: 'Highlights',
+      title: 'Points forts',
       type: 'array',
       of: [{type: 'string'}],
       description: 'Ex: "Cours individuels de 30 minutes par semaine"',
     }),
     defineField({
       name: 'scheduleItems',
-      title: 'Schedule',
+      title: 'Horaires',
       type: 'array',
       of: [{type: 'scheduleItem'}],
     }),

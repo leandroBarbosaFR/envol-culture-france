@@ -80,9 +80,7 @@ export function SiteFooter({ footer }: { footer?: FooterProps }) {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
-          <span>
-            © {new Date().getFullYear()} {copyright}
-          </span>
+          <span>{copyright}</span>
           <div className="flex gap-5">
             <a href={legalUrl} className="hover:text-foreground">
               {legalLabel}

@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/page-header';
 import { client } from '@/lib/sanity/client';
 import { contactPageQuery } from '@/lib/sanity/queries';
 
-type Channel = { label: string; value: string; href: string };
+type Channel = { label: string; value: string; href?: string };
 
 const CHANNEL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
   Email: Mail,
@@ -16,8 +16,8 @@ const CHANNEL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
 export async function generateMetadata(): Promise<Metadata> {
   const data = await client.fetch(contactPageQuery);
   return {
-    title: `${data?.title} · Envol Culture en France`,
-    description: data?.description,
+    title: `${data?.info?.title ?? 'Contact'} · Envol Culture en France`,
+    description: data?.info?.description,
   };
 }
 
@@ -27,9 +27,9 @@ export default async function ContactPage() {
   return (
     <>
       <PageHeader
-        eyebrow={data?.eyebrow}
-        title={data?.title}
-        description={data?.description}
+        eyebrow={data?.info?.eyebrow}
+        title={data?.info?.title}
+        description={data?.info?.description}
         crumbs={[{ href: '/contact', label: 'Contact' }]}
       />
 
@@ -37,28 +37,32 @@ export default async function ContactPage() {
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-12 md:px-6 md:py-24">
           <div className="md:col-span-5">
             <h2 className="text-2xl font-semibold tracking-tight">
-              {data?.coordinatesTitle}
+              {data?.info?.coordinatesTitle}
             </h2>
             <ul className="mt-6 grid gap-3">
-              {data?.channels?.map(({ label, value, href }: Channel) => {
+              {data?.info?.channels?.map(({ label, value, href }: Channel) => {
                 const Icon = CHANNEL_ICONS[label] ?? Mail;
-
+                const inner = (
+                  <>
+                    <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        {label}
+                      </div>
+                      <div className="mt-0.5 font-medium">{value}</div>
+                    </div>
+                  </>
+                );
+                const cls = "flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/60";
                 return (
                   <li key={label}>
-                    <a
-                      href={href}
-                      className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/60"
-                    >
-                      <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      <div>
-                        <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                          {label}
-                        </div>
-                        <div className="mt-0.5 font-medium">{value}</div>
-                      </div>
-                    </a>
+                    {href ? (
+                      <a href={href} className={cls}>{inner}</a>
+                    ) : (
+                      <div className={cls}>{inner}</div>
+                    )}
                   </li>
                 );
               })}
@@ -68,10 +72,10 @@ export default async function ContactPage() {
           <div className="md:col-span-7">
             <div className="rounded-xl border border-border bg-card p-6 md:p-8">
               <h2 className="text-2xl font-semibold tracking-tight">
-                {data?.formTitle}
+                {data?.form?.formTitle}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                {data?.formSubtitle}
+                {data?.form?.formSubtitle}
               </p>
               <form className="mt-6 grid gap-4">
                 <div className="grid gap-4 sm:grid-cols-2">

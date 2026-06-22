@@ -1,9 +1,8 @@
-// sanity/schemaTypes/documents/activitiesPage.ts
 import {defineType, defineField} from 'sanity'
 
-export const activitiesPage = defineType({
-  name: 'activitiesPage',
-  title: 'Page Activités',
+export const homeActivitiesSection = defineType({
+  name: 'homeActivitiesSection',
+  title: 'Section Activités (Accueil)',
   type: 'document',
   fields: [
     defineField({
@@ -18,10 +17,10 @@ export const activitiesPage = defineType({
       type: 'string',
     }),
     defineField({
-      name: 'description',
-      title: 'Description',
-      type: 'text',
-      rows: 3,
+      name: 'linkLabel',
+      title: 'Libellé du lien',
+      type: 'string',
+      description: 'Ex: "Voir toutes les activités"',
     }),
   ],
 })

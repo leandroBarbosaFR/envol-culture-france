@@ -14,15 +14,15 @@ export default async function HomePage() {
       <Hero data={data?.hero} />
       <About data={data?.about} />
       <Activities
-        eyebrow={data?.activitiesEyebrow}
-        title={data?.activitiesTitle}
-        linkLabel={data?.activitiesLinkLabel}
+        eyebrow={data?.activitiesIntro?.eyebrow}
+        title={data?.activitiesIntro?.title}
+        linkLabel={data?.activitiesIntro?.linkLabel}
         activities={data?.recentActivities}
       />
       <News
-        eyebrow={data?.newsEyebrow}
-        title={data?.newsTitle}
-        linkLabel={data?.newsLinkLabel}
+        eyebrow={data?.newsIntro?.eyebrow}
+        title={data?.newsIntro?.title}
+        linkLabel={data?.newsIntro?.linkLabel}
         posts={data?.recentNews}
       />
       <Contact data={data?.contact} />

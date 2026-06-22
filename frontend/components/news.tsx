@@ -48,21 +48,27 @@ export function News({ eyebrow, title, linkLabel, posts = [] }: NewsProps) {
                 href={`/actualites/${post.slug}`}
                 className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition hover:border-primary/60 hover:shadow-md hover:shadow-primary/10"
               >
-                <div className="relative aspect-video overflow-hidden">
-                  <Image
-                    src={post.image.asset.url}
-                    alt={post.title}
-                    fill
-                    sizes="(min-width: 768px) 33vw, 100vw"
-                    className="object-cover transition duration-500 group-hover:scale-105"
-                  />
+                <div className="relative aspect-video overflow-hidden bg-muted">
+                  {post.image?.asset?.url && (
+                    <Image
+                      src={post.image.asset.url}
+                      alt={post.title}
+                      fill
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  )}
                 </div>
                 <div className="flex flex-1 flex-col gap-3 p-5">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className="font-medium text-brand-deep">
-                      {post.category}
-                    </span>
-                    <span>·</span>
+                    {post.category && (
+                      <>
+                        <span className="font-medium text-brand-deep">
+                          {post.category}
+                        </span>
+                        <span>·</span>
+                      </>
+                    )}
                     <span>{post.date}</span>
                   </div>
                   <h3 className="text-lg font-medium leading-snug">
