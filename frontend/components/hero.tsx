@@ -1,40 +1,61 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import Autoplay from "embla-carousel-autoplay";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Autoplay from 'embla-carousel-autoplay';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   type CarouselApi,
-} from "@/components/ui/carousel";
-import { LoadRevealText } from "@/components/load-reveal-text";
+} from '@/components/ui/carousel';
+import { LoadRevealText } from '@/components/load-reveal-text';
 
 const SLIDE_DURATION_MS = 10000;
+
+type Slide = {
+  src: string;
+  alt: string;
+  caption: string;
+};
+
+type HeroData = {
+  titleLine1?: string;
+  titleLine2?: string;
+  subtitle?: string;
+  primaryButtonLabel?: string;
+  primaryButtonUrl?: string;
+  secondaryButtonLabel?: string;
+  secondaryButtonUrl?: string;
+  slides?: {
+    image: { asset: { url: string } };
+    alt: string;
+    caption: string;
+  }[];
+};
 
 function Reveal({
   loaded,
   delay = 0,
-  as: Tag = "span",
-  className = "",
+  as: Tag = 'span',
+  className = '',
   children,
 }: {
   loaded: boolean;
   delay?: number;
-  as?: "span" | "div" | "p" | "dl";
+  as?: 'span' | 'div' | 'p' | 'dl';
   className?: string;
   children: React.ReactNode;
 }) {
-  const displayClass = Tag === "span" ? "inline-block" : "";
+  const displayClass = Tag === 'span' ? 'inline-block' : '';
   return (
     <Tag
       className={`${displayClass} will-change-transform ${className}`}
       style={{
         opacity: loaded ? 1 : 0,
-        transform: loaded ? "translateY(0)" : "translateY(12px)",
-        transition: "opacity 700ms ease-out, transform 700ms ease-out",
+        transform: loaded ? 'translateY(0)' : 'translateY(12px)',
+        transition: 'opacity 700ms ease-out, transform 700ms ease-out',
         transitionDelay: `${delay}ms`,
       }}
     >
@@ -45,60 +66,50 @@ function Reveal({
 
 function ProgressBar({ duration }: { duration: number }) {
   const [progress, setProgress] = useState(0);
-
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       requestAnimationFrame(() => setProgress(100));
     });
     return () => cancelAnimationFrame(id);
   }, []);
-
   return (
     <div className="h-1 w-full overflow-hidden rounded-full bg-white/15">
       <div
         className="h-full rounded-full bg-white"
         style={{
           width: `${progress}%`,
-          transitionProperty: "width",
+          transitionProperty: 'width',
           transitionDuration: `${duration}ms`,
-          transitionTimingFunction: "linear",
+          transitionTimingFunction: 'linear',
         }}
       />
     </div>
   );
 }
 
-const slides = [
-  {
-    src: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2400&q=80",
-    alt: "Atelier de musique avec des enfants",
-    caption: "Musique",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=2400&q=80",
-    alt: "Cours de danse",
-    caption: "Danse",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=2400&q=80",
-    alt: "Atelier de peinture",
-    caption: "Peinture",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=2400&q=80",
-    alt: "Cours de langues",
-    caption: "Langues",
-  },
-];
+export function Hero({ data }: { data?: HeroData }) {
+  const titleLine1 = data?.titleLine1 ?? 'Laissez votre créativité';
+  const titleLine2 = data?.titleLine2 ?? "s'exprimer";
+  const subtitle = data?.subtitle ?? '';
+  const primaryLabel = data?.primaryButtonLabel ?? 'Découvrir les activités';
+  const primaryUrl = data?.primaryButtonUrl ?? '/activites';
+  const secondaryLabel = data?.secondaryButtonLabel ?? 'En savoir plus';
+  const secondaryUrl = data?.secondaryButtonUrl ?? '/about';
+  const slides: Slide[] =
+    data?.slides?.map((s) => ({
+      src: s.image.asset.url,
+      alt: s.alt,
+      caption: s.caption,
+    })) ?? [];
 
-export function Hero() {
-  const autoplay = useRef(
+  const [plugins] = useState(() => [
     Autoplay({
       delay: SLIDE_DURATION_MS,
       stopOnInteraction: false,
       stopOnMouseEnter: false,
-    })
-  );
+    }),
+  ]);
+
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -110,11 +121,11 @@ export function Hero() {
 
   useEffect(() => {
     if (!api) return;
-    setCurrent(api.selectedScrollSnap());
     const onSelect = () => setCurrent(api.selectedScrollSnap());
-    api.on("select", onSelect);
+    api.on('select', onSelect);
+    onSelect();
     return () => {
-      api.off("select", onSelect);
+      api.off('select', onSelect);
     };
   }, [api]);
 
@@ -126,7 +137,7 @@ export function Hero() {
       <div className="absolute inset-0">
         <Carousel
           opts={{ loop: true }}
-          plugins={[autoplay.current]}
+          plugins={plugins}
           setApi={setApi}
           className="h-full"
         >
@@ -163,23 +174,18 @@ export function Hero() {
         <div className="mt-auto px-6 pb-16 md:px-10 md:pb-20">
           <div className="mx-auto max-w-6xl">
             <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
+              <LoadRevealText text={titleLine1} staggerMs={28} duration={650} />{' '}
               <LoadRevealText
-                text="Laissez votre créativité"
+                text={titleLine2}
+                startDelay={650}
                 staggerMs={28}
                 duration={650}
-              />{" "}
-              <span className="bg-gradient-to-r from-primary to-white bg-clip-text text-transparent">
-                <LoadRevealText
-                  text="s'exprimer"
-                  startDelay={650}
-                  staggerMs={28}
-                  duration={650}
-                />
-              </span>
+                className="bg-gradient-to-r from-primary to-white bg-clip-text text-transparent"
+              />
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
               <LoadRevealText
-                text="Envol est un acteur du développement culturel, sportif et social. Musique, danse, peinture et langues, pour tous, du débutant au confirmé."
+                text={subtitle}
                 startDelay={1100}
                 staggerMs={6}
                 duration={500}
@@ -192,16 +198,16 @@ export function Hero() {
               className="mt-8 flex flex-wrap gap-3"
             >
               <Link
-                href="/activites"
+                href={primaryUrl}
                 className="inline-flex h-12 items-center justify-center rounded-md bg-white px-6 text-sm font-medium text-black transition-colors hover:bg-white/90"
               >
-                Découvrir les activités
+                {primaryLabel}
               </Link>
               <Link
-                href="/about"
+                href={secondaryUrl}
                 className="inline-flex h-12 items-center justify-center rounded-md border border-white/30 bg-white/10 px-6 text-sm font-medium text-white backdrop-blur transition-colors hover:bg-white/20"
               >
-                En savoir plus
+                {secondaryLabel}
               </Link>
             </Reveal>
 
@@ -210,8 +216,8 @@ export function Hero() {
                 <ProgressBar key={current} duration={SLIDE_DURATION_MS} />
               </div>
               <span className="text-xs uppercase tracking-[0.18em] text-white/65">
-                {String(current + 1).padStart(2, "0")} /{" "}
-                {String(slides.length).padStart(2, "0")}
+                {String(current + 1).padStart(2, '0')} /{' '}
+                {String(slides.length).padStart(2, '0')}
               </span>
             </div>
           </div>

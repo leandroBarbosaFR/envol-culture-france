@@ -1,27 +1,48 @@
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { activities } from "@/lib/data";
-import { ScrollRevealText } from "@/components/scroll-reveal-text";
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ScrollRevealText } from '@/components/scroll-reveal-text';
 
-export function Activities() {
+type Activity = {
+  slug: string;
+  name: string;
+  tagline: string;
+  image: { asset: { url: string } };
+};
+
+type ActivitiesProps = {
+  eyebrow?: string;
+  title?: string;
+  linkLabel?: string;
+  activities?: Activity[];
+};
+
+export function Activities({
+  eyebrow,
+  title,
+  linkLabel,
+  activities = [],
+}: ActivitiesProps) {
   return (
-    <section id="activities" className="border-t border-border bg-brand-soft/40">
+    <section
+      id="activities"
+      className="border-t border-border bg-brand-soft/40"
+    >
       <div className="mx-auto max-w-6xl px-4 py-20 md:px-6 md:py-28">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="text-sm font-medium text-brand-deep">
-              Les activités
+              {eyebrow}
             </span>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
-              <ScrollRevealText text="Quatre disciplines, une même envie de partager" />
+              <ScrollRevealText text={title ?? ''} />
             </h2>
           </div>
           <Link
             href="/activites"
             className="group inline-flex items-center gap-1.5 text-sm font-medium text-brand-deep"
           >
-            Voir toutes les activités
+            {linkLabel}
             <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Link>
         </div>
@@ -35,7 +56,7 @@ export function Activities() {
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
-                    src={activity.image}
+                    src={activity.image.asset.url}
                     alt={activity.name}
                     fill
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"

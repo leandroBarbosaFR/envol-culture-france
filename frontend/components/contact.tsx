@@ -1,29 +1,8 @@
-import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ScrollRevealText } from "@/components/scroll-reveal-text";
-
-const channels = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "contact@envol-culture.fr",
-    href: "mailto:contact@envol-culture.fr",
-  },
-  {
-    icon: Phone,
-    label: "Téléphone",
-    value: "04 42 00 00 00",
-    href: "tel:+33442000000",
-  },
-  {
-    icon: MapPin,
-    label: "Adresse",
-    value: "Roquefort-La Bédoule, France",
-    href: "#",
-  },
-];
+import Link from 'next/link';
+import { Mail, MapPin, Phone, Clock } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { ScrollRevealText } from '@/components/scroll-reveal-text';
 
 const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
@@ -32,7 +11,16 @@ const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden {...props}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+    {...props}
+  >
     <rect x="3" y="3" width="18" height="18" rx="5" />
     <circle cx="12" cy="12" r="4" />
     <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none" />
@@ -45,13 +33,45 @@ const YoutubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const socials = [
-  { icon: FacebookIcon, label: "Facebook", href: "#" },
-  { icon: InstagramIcon, label: "Instagram", href: "#" },
-  { icon: YoutubeIcon, label: "YouTube", href: "#" },
-];
+const SOCIAL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+  facebook: FacebookIcon,
+  instagram: InstagramIcon,
+  youtube: YoutubeIcon,
+};
 
-export function Contact() {
+const CHANNEL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+  Email: Mail,
+  Téléphone: Phone,
+  Adresse: MapPin,
+  Permanence: Clock,
+};
+
+type Channel = { label: string; value: string; href: string };
+type Social = { platform: string; href: string };
+
+type ContactData = {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  primaryButtonLabel?: string;
+  primaryButtonUrl?: string;
+  secondaryButtonLabel?: string;
+  secondaryButtonUrl?: string;
+  channels?: Channel[];
+  socials?: Social[];
+};
+
+export function Contact({ data }: { data?: ContactData }) {
+  const eyebrow = data?.eyebrow ?? 'Nous contacter';
+  const title = data?.title ?? '';
+  const description = data?.description ?? '';
+  const primaryLabel = data?.primaryButtonLabel ?? 'Nous contacter';
+  const primaryUrl = data?.primaryButtonUrl ?? '/contact';
+  const secondaryLabel = data?.secondaryButtonLabel ?? 'Voir les activités';
+  const secondaryUrl = data?.secondaryButtonUrl ?? '/activites';
+  const channels = data?.channels ?? [];
+  const socials = data?.socials ?? [];
+
   return (
     <section
       id="contact"
@@ -70,70 +90,82 @@ export function Contact() {
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-6">
             <span className="text-sm font-medium text-brand-deep">
-              Nous contacter
+              {eyebrow}
             </span>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
-              <ScrollRevealText text="Une envie de nous rejoindre ?" />
+              <ScrollRevealText text={title} />
             </h2>
             <p className="mt-5 max-w-xl text-muted-foreground leading-relaxed">
-              Que ce soit pour une inscription, une question sur un atelier ou
-              simplement pour faire connaissance, nous serons heureux
-              d&apos;échanger avec vous.
+              {description}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/contact"
-                className={cn(buttonVariants({ size: "lg" }), "rounded-md px-5")}
-              >
-                Nous contacter
-              </Link>
-              <Link
-                href="/activites"
+                href={primaryUrl}
                 className={cn(
-                  buttonVariants({ size: "lg", variant: "outline" }),
-                  "rounded-md px-5"
+                  buttonVariants({ size: 'lg' }),
+                  'rounded-md px-5',
                 )}
               >
-                Voir les activités
+                {primaryLabel}
+              </Link>
+              <Link
+                href={secondaryUrl}
+                className={cn(
+                  buttonVariants({ size: 'lg', variant: 'outline' }),
+                  'rounded-md px-5',
+                )}
+              >
+                {secondaryLabel}
               </Link>
             </div>
           </div>
 
           <ul className="grid gap-3 md:col-span-6">
-            {channels.map(({ icon: Icon, label, value, href }) => (
-              <li key={label}>
-                <a
-                  href={href}
-                  className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/60"
-                >
-                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                      {label}
-                    </div>
-                    <div className="mt-0.5 font-medium">{value}</div>
-                  </div>
-                </a>
-              </li>
-            ))}
-
-            <li className="mt-2 flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">Suivez-nous</span>
-              <div className="flex gap-2">
-                {socials.map(({ icon: Icon, label, href }) => (
+            {channels.map(({ label, value, href }) => {
+              const Icon = CHANNEL_ICONS[label] ?? Mail;
+              return (
+                <li key={label}>
                   <a
-                    key={label}
                     href={href}
-                    aria-label={label}
-                    className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card text-muted-foreground transition hover:border-primary hover:text-foreground"
+                    className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/60"
                   >
-                    <Icon className="h-4 w-4" />
+                    <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        {label}
+                      </div>
+                      <div className="mt-0.5 font-medium">{value}</div>
+                    </div>
                   </a>
-                ))}
-              </div>
-            </li>
+                </li>
+              );
+            })}
+
+            {socials.length > 0 && (
+              <li className="mt-2 flex items-center gap-3">
+                <span className="text-sm text-muted-foreground">
+                  Suivez-nous
+                </span>
+                <div className="flex gap-2">
+                  {socials.map(({ platform, href }) => {
+                    const Icon = SOCIAL_ICONS[platform];
+                    if (!Icon) return null;
+                    return (
+                      <a
+                        key={platform}
+                        href={href}
+                        aria-label={platform}
+                        className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card text-muted-foreground transition hover:border-primary hover:text-foreground"
+                      >
+                        <Icon className="h-4 w-4" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </li>
+            )}
           </ul>
         </div>
       </div>
