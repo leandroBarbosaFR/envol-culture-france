@@ -1,39 +1,45 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import { SiteHeader } from '@/components/site-header';
+import { SiteFooter } from '@/components/site-footer';
+import { client } from '@/lib/sanity/client';
+import { siteSettingsQuery } from '@/lib/sanity/queries';
+import './globals.css';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: "Envol Culture en France — Association culturelle, sportive et sociale",
-  description:
-    "Envol est une association qui promeut la culture, le sport et la cohésion sociale à travers la musique, la danse, la peinture et les langues.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await client.fetch(siteSettingsQuery);
+  return {
+    title: settings?.seoTitle ?? 'Envol Culture en France',
+    description: settings?.seoDescription ?? '',
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await client.fetch(siteSettingsQuery);
+
   return (
     <html
       lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <SiteHeader />
+        <SiteHeader header={settings?.header} />
         <main className="flex-1">{children}</main>
-        <SiteFooter />
+        <SiteFooter footer={settings?.footer} />
       </body>
     </html>
   );
