@@ -1,15 +1,25 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
-import { PageHeader } from "@/components/page-header";
-import { news } from "@/lib/data";
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
+import { PageHeader } from '@/components/page-header';
+import { client } from '@/lib/sanity/client';
+import { newsPostBySlugQuery, newsSlugsQuery } from '@/lib/sanity/queries';
+import { PortableText } from '@portabletext/react';
 
 type Params = { slug: string };
 
-export function generateStaticParams(): Params[] {
-  return news.map((p) => ({ slug: p.slug }));
+type OtherPost = {
+  slug: string;
+  title: string;
+  date: string;
+  image: { asset: { url: string } };
+};
+
+export async function generateStaticParams(): Promise<Params[]> {
+  const posts = await client.fetch(newsSlugsQuery);
+  return posts.map(({ slug }: { slug: string }) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -18,7 +28,7 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = news.find((p) => p.slug === slug);
+  const post = await client.fetch(newsPostBySlugQuery, { slug });
   if (!post) return {};
   return {
     title: `${post.title} · Envol Culture en France`,
@@ -32,10 +42,8 @@ export default async function ActualitePage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const post = news.find((p) => p.slug === slug);
+  const post = await client.fetch(newsPostBySlugQuery, { slug });
   if (!post) notFound();
-
-  const others = news.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   return (
     <>
@@ -44,32 +52,28 @@ export default async function ActualitePage({
         title={post.title}
         description={post.excerpt}
         crumbs={[
-          { href: "/actualites", label: "Actualités" },
+          { href: '/actualites', label: 'Actualités' },
           { href: `/actualites/${post.slug}`, label: post.title },
         ]}
       />
 
       <article className="bg-background">
         <div className="mx-auto max-w-3xl px-4 py-16 md:px-6 md:py-20">
-          <div className="relative mb-10 aspect-video overflow-hidden rounded-xl border border-border bg-muted shadow-xl shadow-primary/10">
-            <Image
-              src={post.image}
-              alt={post.title}
-              fill
-              sizes="(min-width: 768px) 700px, 100vw"
-              className="object-cover"
-              priority
-            />
-          </div>
+          {post.image?.asset?.url && (
+            <div className="relative mb-10 aspect-video overflow-hidden rounded-xl border border-border bg-muted shadow-xl shadow-primary/10">
+              <Image
+                src={post.image.asset.url}
+                alt={post.title}
+                fill
+                sizes="(min-width: 768px) 700px, 100vw"
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
+
           <div className="prose prose-neutral max-w-none">
-            {post.body.map((paragraph, i) => (
-              <p
-                key={i}
-                className="mb-5 text-base leading-relaxed text-foreground/85"
-              >
-                {paragraph}
-              </p>
-            ))}
+            <PortableText value={post.body} />
           </div>
 
           <div className="mt-12 border-t border-border pt-8">
@@ -84,14 +88,14 @@ export default async function ActualitePage({
         </div>
       </article>
 
-      {others.length > 0 ? (
+      {post.otherPosts?.length > 0 && (
         <section className="border-t border-border bg-brand-soft/40">
           <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
             <h2 className="text-xl font-semibold tracking-tight">
               À lire aussi
             </h2>
             <ul className="mt-6 grid gap-6 md:grid-cols-2">
-              {others.map((other) => (
+              {post.otherPosts.map((other: OtherPost) => (
                 <li key={other.slug}>
                   <Link
                     href={`/actualites/${other.slug}`}
@@ -99,7 +103,7 @@ export default async function ActualitePage({
                   >
                     <div className="relative aspect-square w-24 shrink-0 overflow-hidden rounded-xl bg-muted">
                       <Image
-                        src={other.image}
+                        src={other.image.asset.url}
                         alt={other.title}
                         fill
                         sizes="96px"
@@ -120,7 +124,7 @@ export default async function ActualitePage({
             </ul>
           </div>
         </section>
-      ) : null}
+      )}
     </>
   );
 }

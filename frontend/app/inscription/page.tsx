@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { PageHeader } from "@/components/page-header";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { PageHeader } from '@/components/page-header';
 
 export const metadata: Metadata = {
   title: "S'inscrire · Envol Culture en France",
@@ -12,13 +12,13 @@ export default function InscriptionPage() {
       <PageHeader
         title="S'inscrire"
         description="Créez votre compte adhérent pour vous inscrire à un atelier ou suivre l'actualité de l'association."
-        crumbs={[{ href: "/inscription", label: "S'inscrire" }]}
+        crumbs={[{ href: '/inscription', label: "S'inscrire" }]}
       />
       <section className="bg-background">
-        <div className="mx-auto max-w-md px-4 py-16 md:px-6 md:py-20">
+        <div className="mx-auto max-w-lg px-4 py-16 md:px-6 md:py-20">
           <div className="rounded-xl border border-border bg-card p-6 md:p-8">
             <form className="grid gap-4">
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2">
                 <Field id="firstname" label="Prénom" />
                 <Field id="lastname" label="Nom" />
               </div>
@@ -32,7 +32,7 @@ export default function InscriptionPage() {
               </button>
             </form>
             <p className="mt-6 text-center text-sm text-muted-foreground">
-              Déjà inscrit·e ?{" "}
+              Déjà inscrit·e ?{' '}
               <Link
                 href="/connexion"
                 className="font-medium text-brand-deep hover:underline"
@@ -50,7 +50,7 @@ export default function InscriptionPage() {
 function Field({
   label,
   id,
-  type = "text",
+  type = 'text',
 }: {
   label: string;
   id: string;

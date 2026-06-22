@@ -1,30 +1,43 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { PageHeader } from "@/components/page-header";
-import { activities } from "@/lib/data";
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+import { PageHeader } from '@/components/page-header';
+import { client } from '@/lib/sanity/client';
+import { activitiesPageQuery } from '@/lib/sanity/queries';
 
-export const metadata: Metadata = {
-  title: "Les activités · Envol Culture en France",
-  description:
-    "Musique, danse, peinture, langues — découvrez l'ensemble des activités proposées par l'association Envol.",
+type Activity = {
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  image: { asset: { url: string } };
 };
 
-export default function ActivitesPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await client.fetch(activitiesPageQuery);
+  return {
+    title: `${data?.title} · Envol Culture en France`,
+    description: data?.description,
+  };
+}
+
+export default async function ActivitesPage() {
+  const data = await client.fetch(activitiesPageQuery);
+
   return (
     <>
       <PageHeader
-        eyebrow="Les activités"
-        title="Quatre disciplines, une même envie de partager"
-        description="Chaque atelier est animé par un intervenant passionné. Inscriptions ouvertes à la rentrée — n'hésitez pas à venir essayer."
-        crumbs={[{ href: "/activites", label: "Activités" }]}
+        eyebrow={data?.eyebrow}
+        title={data?.title}
+        description={data?.description}
+        crumbs={[{ href: '/activites', label: 'Activités' }]}
       />
 
       <section className="bg-background">
         <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
           <ul className="grid gap-6 md:grid-cols-2">
-            {activities.map((activity) => (
+            {data?.activities?.map((activity: Activity) => (
               <li key={activity.slug}>
                 <Link
                   href={`/activites/${activity.slug}`}
@@ -32,11 +45,12 @@ export default function ActivitesPage() {
                 >
                   <div className="relative aspect-[16/10] overflow-hidden">
                     <Image
-                      src={activity.image}
+                      src={activity.image.asset.url}
                       alt={activity.name}
                       fill
                       sizes="(min-width: 768px) 50vw, 100vw"
                       className="object-cover transition duration-500 group-hover:scale-105"
+                      priority
                     />
                   </div>
                   <div className="flex flex-1 flex-col gap-3 p-6">

@@ -1,85 +1,77 @@
-import type { Metadata } from "next";
-import { Mail, MapPin, Phone, Clock } from "lucide-react";
-import { PageHeader } from "@/components/page-header";
+import type { Metadata } from 'next';
+import { Mail, MapPin, Phone, Clock } from 'lucide-react';
+import { PageHeader } from '@/components/page-header';
+import { client } from '@/lib/sanity/client';
+import { contactPageQuery } from '@/lib/sanity/queries';
 
-export const metadata: Metadata = {
-  title: "Contact · Envol Culture en France",
-  description:
-    "Contactez l'association Envol Culture en France pour toute question, inscription ou rendez-vous.",
+type Channel = { label: string; value: string; href: string };
+
+const CHANNEL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+  Email: Mail,
+  Téléphone: Phone,
+  Adresse: MapPin,
+  Permanence: Clock,
 };
 
-const channels = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "contact@envol-culture.fr",
-    href: "mailto:contact@envol-culture.fr",
-  },
-  {
-    icon: Phone,
-    label: "Téléphone",
-    value: "04 42 00 00 00",
-    href: "tel:+33442000000",
-  },
-  {
-    icon: MapPin,
-    label: "Adresse",
-    value: "Roquefort-La Bédoule, France",
-    href: "#",
-  },
-  {
-    icon: Clock,
-    label: "Permanence",
-    value: "Mercredi & samedi · 10h – 12h",
-    href: "#",
-  },
-];
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await client.fetch(contactPageQuery);
+  return {
+    title: `${data?.title} · Envol Culture en France`,
+    description: data?.description,
+  };
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const data = await client.fetch(contactPageQuery);
+
   return (
     <>
       <PageHeader
-        eyebrow="Nous contacter"
-        title="Une envie de nous rejoindre ?"
-        description="Que ce soit pour une inscription, une question sur un atelier ou simplement pour faire connaissance, nous serons heureux d'échanger avec vous."
-        crumbs={[{ href: "/contact", label: "Contact" }]}
+        eyebrow={data?.eyebrow}
+        title={data?.title}
+        description={data?.description}
+        crumbs={[{ href: '/contact', label: 'Contact' }]}
       />
 
       <section className="bg-background">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-12 md:px-6 md:py-24">
           <div className="md:col-span-5">
             <h2 className="text-2xl font-semibold tracking-tight">
-              Coordonnées
+              {data?.coordinatesTitle}
             </h2>
             <ul className="mt-6 grid gap-3">
-              {channels.map(({ icon: Icon, label, value, href }) => (
-                <li key={label}>
-                  <a
-                    href={href}
-                    className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/60"
-                  >
-                    <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
-                      <Icon className="h-5 w-5" />
-                    </span>
-                    <div>
-                      <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                        {label}
+              {data?.channels?.map(({ label, value, href }: Channel) => {
+                const Icon = CHANNEL_ICONS[label] ?? Mail;
+
+                return (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/60"
+                    >
+                      <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <div>
+                        <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                          {label}
+                        </div>
+                        <div className="mt-0.5 font-medium">{value}</div>
                       </div>
-                      <div className="mt-0.5 font-medium">{value}</div>
-                    </div>
-                  </a>
-                </li>
-              ))}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
           <div className="md:col-span-7">
             <div className="rounded-xl border border-border bg-card p-6 md:p-8">
               <h2 className="text-2xl font-semibold tracking-tight">
-                Écrivez-nous
+                {data?.formTitle}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Nous répondons généralement sous 48 heures.
+                {data?.formSubtitle}
               </p>
               <form className="mt-6 grid gap-4">
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -118,7 +110,7 @@ export default function ContactPage() {
 function Field({
   label,
   id,
-  type = "text",
+  type = 'text',
 }: {
   label: string;
   id: string;

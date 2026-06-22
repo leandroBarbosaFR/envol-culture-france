@@ -1,15 +1,33 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { ArrowLeft, Check } from "lucide-react";
-import { PageHeader } from "@/components/page-header";
-import { activities, schedule, tarifs, type ActivitySlug } from "@/lib/data";
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { ArrowLeft, Check } from 'lucide-react';
+import { PageHeader } from '@/components/page-header';
+import { client } from '@/lib/sanity/client';
+import { activityBySlugQuery, activitySlugsQuery } from '@/lib/sanity/queries';
 
 type Params = { slug: string };
 
-export function generateStaticParams(): Params[] {
-  return activities.map((a) => ({ slug: a.slug }));
+type ScheduleItem = {
+  activity: string;
+  day: string;
+  time: string;
+  duration: string;
+  place: string;
+  teacher: string;
+};
+
+type TarifItem = {
+  activity: string;
+  weekly: string;
+  price: string;
+  age: string;
+};
+
+export async function generateStaticParams(): Promise<Params[]> {
+  const activities = await client.fetch(activitySlugsQuery);
+  return activities.map(({ slug }: { slug: string }) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -18,7 +36,7 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const activity = activities.find((a) => a.slug === slug);
+  const activity = await client.fetch(activityBySlugQuery, { slug });
   if (!activity) return {};
   return {
     title: `${activity.name} · Envol Culture en France`,
@@ -32,11 +50,8 @@ export default async function ActivityPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const activity = activities.find((a) => a.slug === (slug as ActivitySlug));
+  const activity = await client.fetch(activityBySlugQuery, { slug });
   if (!activity) notFound();
-
-  const activitySchedule = schedule.filter((s) => s.category === activity.slug);
-  const activityTarifs = tarifs.filter((t) => t.category === activity.slug);
 
   return (
     <>
@@ -45,7 +60,7 @@ export default async function ActivityPage({
         title={activity.name}
         description={activity.description}
         crumbs={[
-          { href: "/activites", label: "Activités" },
+          { href: '/activites', label: 'Activités' },
           { href: `/activites/${activity.slug}`, label: activity.name },
         ]}
       />
@@ -54,14 +69,16 @@ export default async function ActivityPage({
         <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 md:grid-cols-12 md:px-6 md:py-20">
           <div className="md:col-span-7">
             <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-border bg-muted shadow-xl shadow-primary/10">
-              <Image
-                src={activity.image}
-                alt={activity.name}
-                fill
-                sizes="(min-width: 768px) 60vw, 100vw"
-                className="object-cover"
-                priority
-              />
+              {activity.image?.asset?.url && (
+                <Image
+                  src={activity.image.asset.url}
+                  alt={activity.name}
+                  fill
+                  sizes="(min-width: 768px) 60vw, 100vw"
+                  className="object-cover"
+                  priority
+                />
+              )}
             </div>
           </div>
           <div className="md:col-span-5">
@@ -69,7 +86,7 @@ export default async function ActivityPage({
               Ce qu&apos;il faut savoir
             </h2>
             <ul className="mt-5 space-y-3">
-              {activity.highlights.map((h) => (
+              {activity.highlights?.map((h: string) => (
                 <li key={h} className="flex gap-3 text-sm">
                   <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand-soft text-brand-deep">
                     <Check className="h-3.5 w-3.5" />
@@ -84,7 +101,7 @@ export default async function ActivityPage({
         </div>
       </section>
 
-      {activitySchedule.length > 0 ? (
+      {activity.scheduleItems?.length > 0 && (
         <section className="border-t border-border bg-brand-soft/40">
           <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
             <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
@@ -103,27 +120,29 @@ export default async function ActivityPage({
                     </tr>
                   </thead>
                   <tbody>
-                    {activitySchedule.map((s, i) => (
-                      <tr
-                        key={`${s.activity}-${s.day}-${s.time}-${i}`}
-                        className="border-t border-border"
-                      >
-                        <Td className="font-medium">{s.activity}</Td>
-                        <Td>{s.day}</Td>
-                        <Td>{s.time}</Td>
-                        <Td>{s.place}</Td>
-                        <Td>{s.teacher}</Td>
-                      </tr>
-                    ))}
+                    {activity.scheduleItems.map(
+                      (s: ScheduleItem, i: number) => (
+                        <tr
+                          key={`${s.activity}-${s.day}-${i}`}
+                          className="border-t border-border"
+                        >
+                          <Td className="font-medium">{s.activity}</Td>
+                          <Td>{s.day}</Td>
+                          <Td>{s.time}</Td>
+                          <Td>{s.place}</Td>
+                          <Td>{s.teacher}</Td>
+                        </tr>
+                      ),
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
         </section>
-      ) : null}
+      )}
 
-      {activityTarifs.length > 0 ? (
+      {activity.tarifItems?.length > 0 && (
         <section className="border-t border-border bg-background">
           <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
             <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
@@ -141,7 +160,7 @@ export default async function ActivityPage({
                     </tr>
                   </thead>
                   <tbody>
-                    {activityTarifs.map((t, i) => (
+                    {activity.tarifItems.map((t: TarifItem, i: number) => (
                       <tr
                         key={`${t.activity}-${t.weekly}-${i}`}
                         className="border-t border-border"
@@ -158,7 +177,7 @@ export default async function ActivityPage({
             </div>
           </div>
         </section>
-      ) : null}
+      )}
 
       <section className="border-t border-border bg-background">
         <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
@@ -185,7 +204,7 @@ function Th({ children }: { children: React.ReactNode }) {
 
 function Td({
   children,
-  className = "",
+  className = '',
 }: {
   children: React.ReactNode;
   className?: string;

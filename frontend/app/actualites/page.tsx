@@ -1,29 +1,43 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { PageHeader } from "@/components/page-header";
-import { news } from "@/lib/data";
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { PageHeader } from '@/components/page-header';
+import { client } from '@/lib/sanity/client';
+import { actualitesPageQuery } from '@/lib/sanity/queries';
 
-export const metadata: Metadata = {
-  title: "Actualités · Envol Culture en France",
-  description:
-    "Suivez l'actualité de l'association : événements, ateliers, vie associative.",
+type NewsPost = {
+  slug: string;
+  title: string;
+  date: string;
+  category: string;
+  excerpt: string;
+  image: { asset: { url: string } };
 };
 
-export default function ActualitesPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await client.fetch(actualitesPageQuery);
+  return {
+    title: `${data?.title} · Envol Culture en France`,
+    description: data?.description,
+  };
+}
+
+export default async function ActualitesPage() {
+  const data = await client.fetch(actualitesPageQuery);
+
   return (
     <>
       <PageHeader
-        eyebrow="Nos actualités"
-        title="Ce qui anime l'association"
-        description="Concerts, expositions, nouveaux ateliers, vie associative — retrouvez ici tout ce qui rythme l'année."
-        crumbs={[{ href: "/actualites", label: "Actualités" }]}
+        eyebrow={data?.eyebrow}
+        title={data?.title}
+        description={data?.description}
+        crumbs={[{ href: '/actualites', label: 'Actualités' }]}
       />
 
       <section className="bg-background">
         <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
           <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {news.map((post) => (
+            {data?.posts?.map((post: NewsPost) => (
               <li key={post.slug}>
                 <Link
                   href={`/actualites/${post.slug}`}
@@ -31,7 +45,7 @@ export default function ActualitesPage() {
                 >
                   <div className="relative aspect-video overflow-hidden">
                     <Image
-                      src={post.image}
+                      src={post.image.asset.url}
                       alt={post.title}
                       fill
                       sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"

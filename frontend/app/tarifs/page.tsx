@@ -1,18 +1,29 @@
-import type { Metadata } from "next";
-import { PageHeader } from "@/components/page-header";
-import { tarifs, activities } from "@/lib/data";
+import type { Metadata } from 'next';
+import { PageHeader } from '@/components/page-header';
+import { client } from '@/lib/sanity/client';
+import { tarifsPageQuery } from '@/lib/sanity/queries';
 
-export const metadata: Metadata = {
-  title: "Tarifs · Envol Culture en France",
-  description:
-    "Tarifs des cours de musique, danse, peinture et langues — par trimestre, ajustés selon la commune.",
+type TarifItem = {
+  activity: string;
+  weekly: string;
+  price: string;
+  age: string;
 };
 
-export default function TarifsPage() {
-  const groups = activities.map((a) => ({
-    activity: a,
-    items: tarifs.filter((t) => t.category === a.slug),
-  }));
+type ActivityGroup = {
+  name: string;
+  slug: string;
+  tarifItems: TarifItem[];
+};
+
+export const metadata: Metadata = {
+  title: 'Tarifs · Envol Culture en France',
+  description:
+    'Tarifs des cours de musique, danse, peinture et langues — par trimestre, ajustés selon la commune.',
+};
+
+export default async function TarifsPage() {
+  const activities = await client.fetch(tarifsPageQuery);
 
   return (
     <>
@@ -20,7 +31,7 @@ export default function TarifsPage() {
         eyebrow="Tarifs"
         title="Les tarifs des activités"
         description="Les tarifs varient en fonction de l'activité, de la durée et de la catégorie d'âge. Vous trouverez ici les informations détaillées pour chaque atelier."
-        crumbs={[{ href: "/tarifs", label: "Tarifs" }]}
+        crumbs={[{ href: '/tarifs', label: 'Tarifs' }]}
       />
 
       <section className="bg-background">
@@ -33,14 +44,12 @@ export default function TarifsPage() {
           </div>
 
           <div className="mt-12 space-y-12">
-            {groups.map(({ activity, items }) =>
-              items.length > 0 ? (
-                <section key={activity.slug} id={activity.slug}>
-                  <div className="flex items-end justify-between gap-4">
-                    <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-                      {activity.name}
-                    </h2>
-                  </div>
+            {activities?.map(({ name, slug, tarifItems }: ActivityGroup) =>
+              tarifItems?.length > 0 ? (
+                <section key={slug} id={slug}>
+                  <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+                    {name}
+                  </h2>
                   <div className="mt-6 overflow-hidden rounded-xl border border-border bg-card">
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
@@ -53,7 +62,7 @@ export default function TarifsPage() {
                           </tr>
                         </thead>
                         <tbody>
-                          {items.map((t, i) => (
+                          {tarifItems.map((t, i) => (
                             <tr
                               key={`${t.activity}-${t.weekly}-${i}`}
                               className="border-t border-border"
@@ -69,7 +78,7 @@ export default function TarifsPage() {
                     </div>
                   </div>
                 </section>
-              ) : null
+              ) : null,
             )}
           </div>
         </div>
@@ -88,7 +97,7 @@ function Th({ children }: { children: React.ReactNode }) {
 
 function Td({
   children,
-  className = "",
+  className = '',
 }: {
   children: React.ReactNode;
   className?: string;
