@@ -44,8 +44,14 @@ export const siteFooter = defineType({
       description: "Se connecter + S'inscrire",
     }),
     defineField({
+      name: 'contactColumnTitle',
+      title: 'Titre colonne contact',
+      type: 'string',
+      description: 'Ex: "Contact" — les coordonnées elles-mêmes sont dans « Coordonnées ».',
+    }),
+    defineField({
       name: 'copyright',
-      title: 'Texte copyright',
+      title: 'Mention de copyright',
       type: 'string',
       description: 'Ex: "Envol — Association loi 1901"',
     }),

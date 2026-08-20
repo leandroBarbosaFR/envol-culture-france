@@ -10,19 +10,19 @@ export const contactChannel = defineType({
       name: 'label',
       title: 'Libellé',
       type: 'string',
-      description: 'Ex: "Email", "Téléphone", "Adresse"',
+      description: 'Ex: "E-mail", "Téléphone", "Adresse"',
     }),
     defineField({
       name: 'value',
       title: 'Valeur',
       type: 'string',
-      description: 'Ex: "contact@envol-culture.fr"',
+      description: 'Ex: "associationenvol13830@gmail.com"',
     }),
     defineField({
       name: 'href',
       title: 'URL',
       type: 'string',
-      description: 'Ex: "mailto:contact@envol-culture.fr" ou "tel:+33..."',
+      description: 'Ex: "mailto:associationenvol13830@gmail.com" ou "tel:+33670013060"',
     }),
   ],
   preview: {

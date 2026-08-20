@@ -7,9 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
-  --font-heading: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-poppins), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -42,7 +41,7 @@
   /* Brand: #96ddff (sky blue) — converted to OKLCH */
   --brand: oklch(0.873 0.075 232);
   --brand-soft: oklch(0.965 0.025 232);
-  --brand-deep: oklch(0.55 0.15 232);
+  --brand-deep: oklch(0.5 0.15 232);
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.18 0.02 240);
@@ -50,19 +49,20 @@
   --card-foreground: oklch(0.18 0.02 240);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.02 240);
-  --primary: oklch(0.873 0.075 232);
-  --primary-foreground: oklch(0.18 0.05 240);
+  /* Action colour = brand-deep; the pale logo blue (--brand) is the accent */
+  --primary: oklch(0.5 0.15 232);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.965 0.025 232);
-  --secondary-foreground: oklch(0.25 0.05 240);
+  --secondary-foreground: oklch(0.5 0.15 232);
   --muted: oklch(0.97 0.005 240);
   --muted-foreground: oklch(0.5 0.02 240);
   --accent: oklch(0.965 0.025 232);
-  --accent-foreground: oklch(0.25 0.05 240);
+  --accent-foreground: oklch(0.5 0.15 232);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.92 0.015 232);
   --input: oklch(0.92 0.015 232);
-  --ring: oklch(0.7 0.12 232);
-  --radius: 0.75rem;
+  --ring: oklch(0.5 0.15 232);
+  --radius: 0.5rem;
 }
 
 @layer base {
@@ -78,6 +78,6 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-heading);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
 }

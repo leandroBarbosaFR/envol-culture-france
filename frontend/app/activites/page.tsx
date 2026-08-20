@@ -3,6 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { PageHeader } from '@/components/page-header';
+import { cardClass, cardHoverClass } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import { client } from '@/lib/sanity/client';
 import { activitiesPageQuery } from '@/lib/sanity/queries';
 
@@ -41,7 +43,7 @@ export default async function ActivitesPage() {
               <li key={activity.slug}>
                 <Link
                   href={`/activites/${activity.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/15"
+                  className={cn(cardClass, cardHoverClass, 'group h-full')}
                 >
                   <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                     {activity.image?.asset?.url && (
@@ -50,7 +52,7 @@ export default async function ActivitesPage() {
                         alt={activity.name}
                         fill
                         sizes="(min-width: 768px) 50vw, 100vw"
-                        className="object-cover transition duration-500 group-hover:scale-105"
+                        className="object-cover"
                         priority
                       />
                     )}
@@ -63,8 +65,8 @@ export default async function ActivitesPage() {
                           {activity.tagline}
                         </p>
                       </div>
-                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-soft text-brand-deep transition group-hover:bg-primary group-hover:text-primary-foreground">
-                        <ArrowUpRight className="h-4 w-4" />
+                      <span className="grid size-9 shrink-0 place-items-center rounded-md bg-brand-soft text-brand-deep transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                        <ArrowUpRight className="size-4" />
                       </span>
                     </div>
                     <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-3">

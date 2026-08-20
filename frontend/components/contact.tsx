@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { Mail, MapPin, Phone, Clock } from 'lucide-react';
+import { ContactChannels } from '@/components/contact-channels';
 import { buttonVariants } from '@/components/ui/button';
+import { cardClass, cardHoverClass } from '@/components/ui/card';
+import type { SiteContact } from '@/lib/contact';
 import { cn } from '@/lib/utils';
-import { ScrollRevealText } from '@/components/scroll-reveal-text';
 
 const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
@@ -39,14 +40,6 @@ const SOCIAL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
   youtube: YoutubeIcon,
 };
 
-const CHANNEL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
-  Email: Mail,
-  Téléphone: Phone,
-  Adresse: MapPin,
-  Permanence: Clock,
-};
-
-type Channel = { label: string; value: string; href?: string };
 type Social = { platform: string; href: string };
 
 type ContactData = {
@@ -57,11 +50,16 @@ type ContactData = {
   primaryButtonUrl?: string;
   secondaryButtonLabel?: string;
   secondaryButtonUrl?: string;
-  channels?: Channel[];
   socials?: Social[];
 };
 
-export function Contact({ data }: { data?: ContactData }) {
+export function Contact({
+  data,
+  siteContact,
+}: {
+  data?: ContactData;
+  siteContact?: SiteContact;
+}) {
   const eyebrow = data?.eyebrow ?? 'Nous contacter';
   const title = data?.title ?? '';
   const description = data?.description ?? '';
@@ -69,90 +67,32 @@ export function Contact({ data }: { data?: ContactData }) {
   const primaryUrl = data?.primaryButtonUrl ?? '/contact';
   const secondaryLabel = data?.secondaryButtonLabel ?? 'Voir les activités';
   const secondaryUrl = data?.secondaryButtonUrl ?? '/activites';
-  const channels = data?.channels ?? [];
   const socials = data?.socials ?? [];
 
   return (
-    <section
-      id="contact"
-      className="relative overflow-hidden border-t border-border"
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-brand-soft via-background to-background"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-40 -right-32 -z-10 h-96 w-96 rounded-full bg-primary/30 blur-3xl"
-      />
-
+    <section id="contact" className="border-t border-border bg-brand-soft/40">
       <div className="mx-auto max-w-6xl px-4 py-20 md:px-6 md:py-28">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-6">
-            <span className="text-sm font-medium text-brand-deep">
-              {eyebrow}
-            </span>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
-              <ScrollRevealText text={title} />
-            </h2>
-            <p className="mt-5 max-w-xl text-muted-foreground leading-relaxed">
-              {description}
-            </p>
+            <span className="text-sm font-medium text-brand-deep">{eyebrow}</span>
+            <h2 className="mt-3 text-3xl font-semibold md:text-4xl">{title}</h2>
+            <p className="mt-5 max-w-xl leading-relaxed text-muted-foreground">{description}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href={primaryUrl}
-                className={cn(
-                  buttonVariants({ size: 'lg' }),
-                  'rounded-md px-5',
-                )}
-              >
+              <Link href={primaryUrl} className={buttonVariants()}>
                 {primaryLabel}
               </Link>
-              <Link
-                href={secondaryUrl}
-                className={cn(
-                  buttonVariants({ size: 'lg', variant: 'outline' }),
-                  'rounded-md px-5',
-                )}
-              >
+              <Link href={secondaryUrl} className={buttonVariants({ variant: 'outline' })}>
                 {secondaryLabel}
               </Link>
             </div>
           </div>
 
-          <ul className="grid gap-3 md:col-span-6">
-            {channels.map(({ label, value, href }) => {
-              const Icon = CHANNEL_ICONS[label] ?? Mail;
-              const inner = (
-                <>
-                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                      {label}
-                    </div>
-                    <div className="mt-0.5 font-medium">{value}</div>
-                  </div>
-                </>
-              );
-              const cls = "flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/60";
-              return (
-                <li key={label}>
-                  {href ? (
-                    <a href={href} className={cls}>{inner}</a>
-                  ) : (
-                    <div className={cls}>{inner}</div>
-                  )}
-                </li>
-              );
-            })}
+          <div className="grid gap-3 md:col-span-6">
+            <ContactChannels contact={siteContact ?? null} />
 
             {socials.length > 0 && (
-              <li className="mt-2 flex items-center gap-3">
-                <span className="text-sm text-muted-foreground">
-                  Suivez-nous
-                </span>
+              <div className="mt-2 flex items-center gap-3">
+                <span className="text-sm text-muted-foreground">Suivez-nous</span>
                 <div className="flex gap-2">
                   {socials.map(({ platform, href }) => {
                     const Icon = SOCIAL_ICONS[platform];
@@ -162,16 +102,20 @@ export function Contact({ data }: { data?: ContactData }) {
                         key={platform}
                         href={href}
                         aria-label={platform}
-                        className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card text-muted-foreground transition hover:border-primary hover:text-foreground"
+                        className={cn(
+                          cardClass,
+                          cardHoverClass,
+                          'grid size-10 place-items-center text-muted-foreground hover:text-foreground',
+                        )}
                       >
-                        <Icon className="h-4 w-4" />
+                        <Icon className="size-4" />
                       </a>
                     );
                   })}
                 </div>
-              </li>
+              </div>
             )}
-          </ul>
+          </div>
         </div>
       </div>
     </section>

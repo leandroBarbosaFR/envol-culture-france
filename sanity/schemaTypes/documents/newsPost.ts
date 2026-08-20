@@ -13,7 +13,7 @@ export const newsPost = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'Adresse URL (slug)',
       type: 'slug',
       options: {source: 'title'},
     }),

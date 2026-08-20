@@ -21,11 +21,37 @@ export const siteFooterQuery = groq`
     navLinks,
     memberColumnTitle,
     memberLinks,
+    contactColumnTitle,
     copyright,
     legalLabel,
     legalUrl,
     privacyLabel,
     privacyUrl,
+  }
+`;
+
+// ── Coordonnées (source unique : pied de page, contact, accueil) ─────────────
+export const siteContactQuery = groq`
+  *[_type == "siteContact"][0] {
+    organisationName,
+    contactName,
+    phone,
+    email,
+    addressLine1,
+    addressLine2,
+    postalCode,
+    city,
+    openingHours
+  }
+`;
+
+// ── Pages légales (id fixe : mentionsLegales | politiqueConfidentialite) ──────
+export const legalPageQuery = groq`
+  *[_type == "legalPage" && _id == $id][0] {
+    title,
+    lastUpdated,
+    showContact,
+    body
   }
 `;
 
@@ -79,8 +105,18 @@ export const homePageQuery = groq`
       primaryButtonUrl,
       secondaryButtonLabel,
       secondaryButtonUrl,
-      channels[] { label, value, href },
       socials[] { platform, href }
+    },
+    "siteContact": *[_type == "siteContact"][0] {
+      organisationName,
+      contactName,
+      phone,
+      email,
+      addressLine1,
+      addressLine2,
+      postalCode,
+      city,
+      openingHours
     },
     "recentNews": *[_type == "newsPost"] | order(date desc) [0...3] {
       title,
@@ -215,13 +251,39 @@ export const contactPageQuery = groq`
       eyebrow,
       title,
       description,
-      coordinatesTitle,
-      channels[] { label, value, href }
+      coordinatesTitle
+    },
+    "contact": *[_type == "siteContact"][0] {
+      organisationName,
+      contactName,
+      phone,
+      email,
+      addressLine1,
+      addressLine2,
+      postalCode,
+      city,
+      openingHours
     },
     "form": *[_type == "contactPageForm"][0] {
       formTitle,
       formSubtitle
     }
+  }
+`;
+
+// ── Tarifs & Horaires Page (single page, two tabs) ───────────────────────────
+export const tarifsHorairesPageQuery = groq`
+  *[_type == "tarifsHorairesPage"][0] {
+    tarifsTabLabel,
+    tarifsEyebrow,
+    tarifsTitle,
+    tarifsDescription,
+    tarifsContent,
+    horairesTabLabel,
+    horairesEyebrow,
+    horairesTitle,
+    horairesDescription,
+    horairesContent
   }
 `;
 

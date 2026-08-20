@@ -6,10 +6,10 @@ export const structure: StructureResolver = (S) =>
     .items([
       // ── Paramètres Généraux ──────────────────────────────────────────────────
       S.listItem()
-        .title('Paramètres Généraux')
+        .title('Paramètres généraux')
         .child(
           S.list()
-            .title('Paramètres Généraux')
+            .title('Paramètres généraux')
             .items([
               S.listItem()
                 .title('En-tête')
@@ -18,12 +18,15 @@ export const structure: StructureResolver = (S) =>
                 .title('Pied de page')
                 .child(S.editor().schemaType('siteFooter').documentId('siteFooter')),
               S.listItem()
-                .title('🔍 SEO Global')
+                .title('Coordonnées')
+                .child(S.editor().schemaType('siteContact').documentId('siteContact')),
+              S.listItem()
+                .title('🔍 SEO global')
                 .child(
                   S.editor()
                     .schemaType('pageSeo')
                     .documentId('seoGlobal')
-                    .title('SEO Global (valeurs par défaut)'),
+                    .title('SEO global (valeurs par défaut)'),
                 ),
             ]),
         ),
@@ -47,7 +50,7 @@ export const structure: StructureResolver = (S) =>
                 ),
               S.divider(),
               S.listItem()
-                .title('Hero')
+                .title("Bannière d'accueil")
                 .child(S.editor().schemaType('heroSection').documentId('heroSection')),
               S.listItem()
                 .title('Section À propos')
@@ -152,6 +155,32 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
 
+      // ── Tarifs & Horaires ────────────────────────────────────────────────────
+      S.listItem()
+        .title('Tarifs & Horaires')
+        .child(
+          S.list()
+            .title('Tarifs & Horaires')
+            .items([
+              S.listItem()
+                .title('🔍 SEO')
+                .child(
+                  S.editor()
+                    .schemaType('pageSeo')
+                    .documentId('seoTarifsHoraires')
+                    .title('SEO — Tarifs & Horaires'),
+                ),
+              S.divider(),
+              S.listItem()
+                .title('Contenu de la page')
+                .child(
+                  S.editor()
+                    .schemaType('tarifsHorairesPage')
+                    .documentId('tarifsHorairesPage'),
+                ),
+            ]),
+        ),
+
       // ── Contact ──────────────────────────────────────────────────────────────
       S.listItem()
         .title('Contact')
@@ -174,6 +203,34 @@ export const structure: StructureResolver = (S) =>
               S.listItem()
                 .title('Formulaire')
                 .child(S.editor().schemaType('contactPageForm').documentId('contactPageForm')),
+            ]),
+        ),
+
+      S.divider(),
+
+      // ── Pages légales ────────────────────────────────────────────────────────
+      S.listItem()
+        .title('Pages légales')
+        .child(
+          S.list()
+            .title('Pages légales')
+            .items([
+              S.listItem()
+                .title('Mentions légales')
+                .child(
+                  S.editor()
+                    .schemaType('legalPage')
+                    .documentId('mentionsLegales')
+                    .title('Mentions légales'),
+                ),
+              S.listItem()
+                .title('Politique de confidentialité')
+                .child(
+                  S.editor()
+                    .schemaType('legalPage')
+                    .documentId('politiqueConfidentialite')
+                    .title('Politique de confidentialité'),
+                ),
             ]),
         ),
     ])

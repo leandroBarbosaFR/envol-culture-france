@@ -10,7 +10,8 @@ import {
   CarouselItem,
   type CarouselApi,
 } from '@/components/ui/carousel';
-import { LoadRevealText } from '@/components/load-reveal-text';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const SLIDE_DURATION_MS = 10000;
 
@@ -35,34 +36,8 @@ type HeroData = {
   }[];
 };
 
-function Reveal({
-  loaded,
-  delay = 0,
-  as: Tag = 'span',
-  className = '',
-  children,
-}: {
-  loaded: boolean;
-  delay?: number;
-  as?: 'span' | 'div' | 'p' | 'dl';
-  className?: string;
-  children: React.ReactNode;
-}) {
-  const displayClass = Tag === 'span' ? 'inline-block' : '';
-  return (
-    <Tag
-      className={`${displayClass} will-change-transform ${className}`}
-      style={{
-        opacity: loaded ? 1 : 0,
-        transform: loaded ? 'translateY(0)' : 'translateY(12px)',
-        transition: 'opacity 700ms ease-out, transform 700ms ease-out',
-        transitionDelay: `${delay}ms`,
-      }}
-    >
-      {children}
-    </Tag>
-  );
-}
+/** CSS-only fade-up on load (tw-animate-css): works without JS and in background tabs. */
+const REVEAL = 'animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-700 ease-out';
 
 function ProgressBar({ duration }: { duration: number }) {
   const [progress, setProgress] = useState(0);
@@ -73,9 +48,9 @@ function ProgressBar({ duration }: { duration: number }) {
     return () => cancelAnimationFrame(id);
   }, []);
   return (
-    <div className="h-1 w-full overflow-hidden rounded-full bg-white/15">
+    <div className="h-0.5 w-full overflow-hidden bg-white/20">
       <div
-        className="h-full rounded-full bg-white"
+        className="h-full bg-white"
         style={{
           width: `${progress}%`,
           transitionProperty: 'width',
@@ -114,12 +89,6 @@ export function Hero({ data }: { data?: HeroData }) {
 
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setLoaded(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
 
   useEffect(() => {
     if (!api) return;
@@ -134,7 +103,7 @@ export function Hero({ data }: { data?: HeroData }) {
   return (
     <section
       id="top"
-      className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-black text-white"
+      className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-foreground text-white"
     >
       <div className="absolute inset-0">
         <Carousel
@@ -163,62 +132,44 @@ export function Hero({ data }: { data?: HeroData }) {
         </Carousel>
       </div>
 
+      {/* Photo treatment: darken so white text stays legible on any slide. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/30"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/25"
       />
 
       <div className="relative z-10 flex h-full flex-col">
-        <div className="mt-auto px-6 pb-16 md:px-10 md:pb-20">
+        <div className="mt-auto px-4 pb-16 md:px-6 md:pb-20">
           <div className="mx-auto max-w-6xl">
-            <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
-              <LoadRevealText text={titleLine1} staggerMs={28} duration={650} />{' '}
-              <LoadRevealText
-                text={titleLine2}
-                startDelay={650}
-                staggerMs={28}
-                duration={650}
-                className="bg-gradient-to-r from-primary to-white bg-clip-text text-transparent"
-              />
+            <h1 className={cn(REVEAL, 'max-w-4xl text-5xl font-semibold leading-[1.1] md:text-6xl lg:text-7xl')}>
+              {titleLine1} <span className="text-brand">{titleLine2}</span>
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
-              <LoadRevealText
-                text={subtitle}
-                startDelay={1100}
-                staggerMs={6}
-                duration={500}
-              />
-            </p>
-            <Reveal
-              as="div"
-              loaded={loaded}
-              delay={1400}
-              className="mt-8 flex flex-wrap gap-3"
-            >
-              <Link
-                href={primaryUrl}
-                className="inline-flex h-12 items-center justify-center rounded-md bg-white px-6 text-sm font-medium text-black transition-colors hover:bg-white/90"
-              >
+            {subtitle && (
+              <p className={cn(REVEAL, 'delay-150 mt-5 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg')}>
+                {subtitle}
+              </p>
+            )}
+            <div className={cn(REVEAL, 'delay-300 mt-8 flex flex-wrap gap-3')}>
+              <Link href={primaryUrl} className={buttonVariants({ size: 'lg' })}>
                 {primaryLabel}
               </Link>
               <Link
                 href={secondaryUrl}
-                className="inline-flex h-12 items-center justify-center rounded-md border border-white/30 bg-white/10 px-6 text-sm font-medium text-white backdrop-blur transition-colors hover:bg-white/20"
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'lg' }),
+                  'border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white',
+                )}
               >
                 {secondaryLabel}
               </Link>
-            </Reveal>
+            </div>
 
             {slides.length > 0 && (
               <div className="mt-10 flex items-center gap-4">
-                <div className="flex-1 max-w-xs">
+                <div className="max-w-xs flex-1">
                   <ProgressBar key={current} duration={SLIDE_DURATION_MS} />
                 </div>
-                <span className="text-xs uppercase tracking-[0.18em] text-white/65">
+                <span className="text-xs tabular-nums text-white/70">
                   {String(current + 1).padStart(2, '0')} /{' '}
                   {String(slides.length).padStart(2, '0')}
                 </span>

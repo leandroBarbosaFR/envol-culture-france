@@ -2,7 +2,7 @@ import {defineType, defineField} from 'sanity'
 
 export const heroSection = defineType({
   name: 'heroSection',
-  title: 'Hero',
+  title: "Bannière d'accueil",
   type: 'document',
   fields: [
     defineField({
@@ -13,7 +13,7 @@ export const heroSection = defineType({
     }),
     defineField({
       name: 'titleLine2',
-      title: 'Titre — Ligne 2 (gradient)',
+      title: 'Titre — Ligne 2 (dégradé)',
       type: 'string',
       description: "Ex: \"s'exprimer\"",
     }),

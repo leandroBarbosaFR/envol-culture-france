@@ -27,11 +27,14 @@ export const contactPageInfo = defineType({
       type: 'string',
       description: 'Ex: "Coordonnées"',
     }),
+    // Les coordonnées (adresse, téléphone, e-mail, permanence) viennent du
+    // document « Coordonnées » (siteContact). Ancien champ conservé mais masqué.
     defineField({
       name: 'channels',
       title: 'Canaux de contact',
       type: 'array',
       of: [{type: 'contactChannel'}],
+      hidden: true,
     }),
   ],
 })

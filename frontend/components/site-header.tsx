@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ArrowRight, Menu, X } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 type NavItem = { href: string; label: string };
 
@@ -16,10 +18,9 @@ type HeaderProps = {
 };
 
 const NAV_LINK =
-  'rounded-md px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/75 transition-colors duration-200 hover:bg-foreground/5 hover:text-foreground';
+  'rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground';
 
-const PILL =
-  'rounded-xl border border-black/5 bg-white/85 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] backdrop-blur-md';
+const BAR = 'rounded-lg border border-border bg-background/95 shadow-sm';
 
 export function SiteHeader({ header }: { header?: HeaderProps }) {
   const [open, setOpen] = useState(false);
@@ -49,15 +50,10 @@ export function SiteHeader({ header }: { header?: HeaderProps }) {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50">
-        <div className="mx-auto flex max-w-7xl items-center justify-center px-6 py-5">
+        <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-4 md:px-6">
           {/* Mobile */}
-          <div
-            className={`${PILL} flex items-center gap-1 p-1.5 pl-5 lg:hidden`}
-          >
-            <Link
-              href="/"
-              className="py-2 pr-3 text-sm font-semibold tracking-tight text-foreground"
-            >
+          <div className={`${BAR} flex w-full items-center justify-between p-1.5 pl-4 lg:hidden`}>
+            <Link href="/" className="py-2 font-heading font-semibold text-foreground">
               {siteName}
             </Link>
             <button
@@ -65,22 +61,19 @@ export function SiteHeader({ header }: { header?: HeaderProps }) {
               aria-label="Ouvrir le menu"
               aria-expanded={open}
               onClick={() => setOpen(true)}
-              className="grid h-10 w-10 place-items-center rounded-md text-foreground/80 transition-colors hover:bg-foreground/5 hover:text-foreground"
+              className="grid size-10 place-items-center rounded-md text-foreground transition-colors hover:bg-muted"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="size-5" />
             </button>
           </div>
 
           {/* Desktop */}
-          <div className={`${PILL} hidden items-center gap-1 p-1.5 lg:flex`}>
-            <Link
-              href="/"
-              className="px-4 py-2 text-sm font-semibold tracking-tight text-foreground"
-            >
+          <div className={`${BAR} hidden items-center gap-1 p-1.5 lg:flex`}>
+            <Link href="/" className="px-3 py-2 font-heading font-semibold text-foreground">
               {siteName}
             </Link>
-            <span aria-hidden className="mx-1 h-5 w-px bg-foreground/10" />
-            <nav className="flex items-center gap-1">
+            <span aria-hidden className="mx-1 h-5 w-px bg-border" />
+            <nav className="flex items-center gap-0.5">
               {navLinks.map((item) => (
                 <Link key={item.href} href={item.href} className={NAV_LINK}>
                   {item.label}
@@ -90,10 +83,7 @@ export function SiteHeader({ header }: { header?: HeaderProps }) {
                 {secondaryLabel}
               </Link>
             </nav>
-            <Link
-              href={primaryUrl}
-              className="ml-1 inline-flex h-10 items-center justify-center rounded-md bg-foreground px-5 text-[11px] font-semibold uppercase tracking-[0.12em] text-background transition-colors duration-200 hover:bg-foreground/85"
-            >
+            <Link href={primaryUrl} className={cn(buttonVariants(), 'ml-1')}>
               {primaryLabel}
             </Link>
           </div>
@@ -140,88 +130,55 @@ function MobileDrawer({
       style={{ pointerEvents: open ? 'auto' : 'none' }}
     >
       <div
-        className={`absolute inset-0 flex flex-col overflow-hidden bg-foreground text-background transition-[opacity,transform] duration-500 ease-out ${
-          open ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
+        className={`absolute inset-0 flex flex-col overflow-hidden bg-foreground text-background transition-[opacity,transform] duration-300 ease-out ${
+          open ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'
         }`}
       >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-32 -right-20 h-96 w-96 rounded-full bg-primary/30 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-primary/20 blur-3xl"
-        />
-
-        <div className="relative flex items-center justify-between px-6 py-5">
-          <span className="text-sm font-semibold tracking-tight">
-            {siteName}
-          </span>
+        <div className="flex items-center justify-between px-5 py-4">
+          <span className="font-heading font-semibold">{siteName}</span>
           <button
             type="button"
             aria-label="Fermer le menu"
             onClick={onClose}
-            className="grid h-11 w-11 place-items-center rounded-md text-background/80 transition-colors hover:bg-background/10 hover:text-background"
+            className="grid size-10 place-items-center rounded-md text-background/80 transition-colors hover:bg-background/10 hover:text-background"
           >
-            <X className="h-5 w-5" />
+            <X className="size-5" />
           </button>
         </div>
 
-        <nav className="relative flex flex-1 flex-col justify-center px-6 pb-6">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-background/45">
-            Navigation
-          </span>
-          <ul className="mt-5 flex flex-col gap-1">
-            {navLinks.map((item, i) => (
-              <li
-                key={item.href}
-                style={{
-                  opacity: open ? 1 : 0,
-                  transform: open ? 'translateY(0)' : 'translateY(12px)',
-                  transition:
-                    'opacity 500ms ease-out, transform 500ms ease-out',
-                  transitionDelay: open ? `${180 + i * 60}ms` : '0ms',
-                }}
-              >
+        <nav className="flex flex-1 flex-col justify-center px-5 pb-6">
+          <span className="text-xs font-medium text-background/50">Navigation</span>
+          <ul className="mt-4 flex flex-col">
+            {navLinks.map((item) => (
+              <li key={item.href}>
                 <Link
                   href={item.href}
                   onClick={onClose}
-                  className="group flex items-center justify-between gap-4 border-b border-background/10 py-4 text-4xl font-semibold tracking-tight text-background transition-colors duration-500 hover:text-primary"
+                  className="group flex items-center justify-between gap-4 border-b border-background/10 py-4 font-heading text-3xl font-semibold text-background transition-colors hover:text-brand"
                 >
                   <span>{item.label}</span>
-                  <ArrowRight
-                    className="h-6 w-6 shrink-0 text-background/30 will-change-transform group-hover:-rotate-45 group-hover:text-primary"
-                    style={{
-                      transition:
-                        'transform 600ms cubic-bezier(0.16, 1, 0.3, 1), color 500ms ease-out',
-                    }}
-                  />
+                  <ArrowRight className="size-6 shrink-0 text-background/30 transition-colors group-hover:text-brand" />
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
 
-        <div
-          className="relative grid grid-cols-2 gap-3 border-t border-background/10 bg-background/[0.03] p-6 backdrop-blur"
-          style={{
-            opacity: open ? 1 : 0,
-            transform: open ? 'translateY(0)' : 'translateY(8px)',
-            transition: 'opacity 500ms ease-out, transform 500ms ease-out',
-            transitionDelay: open ? `${180 + navLinks.length * 60}ms` : '0ms',
-          }}
-        >
+        <div className="grid grid-cols-2 gap-3 border-t border-background/10 p-5">
           <Link
             href={secondaryUrl}
             onClick={onClose}
-            className="inline-flex h-12 items-center justify-center rounded-md border border-background/25 bg-background/5 px-5 text-sm font-medium text-background transition-colors hover:bg-background/15"
+            className={cn(
+              buttonVariants({ variant: 'outline', size: 'lg' }),
+              'border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background',
+            )}
           >
             {secondaryLabel}
           </Link>
           <Link
             href={primaryUrl}
             onClick={onClose}
-            className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/85"
+            className={buttonVariants({ size: 'lg' })}
           >
             {primaryLabel}
           </Link>

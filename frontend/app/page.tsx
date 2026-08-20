@@ -25,7 +25,7 @@ export default async function HomePage() {
         linkLabel={data?.newsIntro?.linkLabel}
         posts={data?.recentNews}
       />
-      <Contact data={data?.contact} />
+      <Contact data={data?.contact} siteContact={data?.siteContact} />
     </>
   );
 }

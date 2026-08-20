@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { PageHeader } from '@/components/page-header';
+import { cardClass, cardHoverClass } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import { client } from '@/lib/sanity/client';
 import { newsPostBySlugQuery, newsSlugsQuery } from '@/lib/sanity/queries';
 import { PortableText } from '@portabletext/react';
@@ -60,7 +62,7 @@ export default async function ActualitePage({
       <article className="bg-background">
         <div className="mx-auto max-w-3xl px-4 py-16 md:px-6 md:py-20">
           {post.image?.asset?.url && (
-            <div className="relative mb-10 aspect-video overflow-hidden rounded-xl border border-border bg-muted shadow-xl shadow-primary/10">
+            <div className="relative mb-10 aspect-video overflow-hidden rounded-lg border border-border bg-muted">
               <Image
                 src={post.image.asset.url}
                 alt={post.title}
@@ -83,7 +85,7 @@ export default async function ActualitePage({
               href="/actualites"
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="size-4" />
               Toutes les actualités
             </Link>
           </div>
@@ -93,7 +95,7 @@ export default async function ActualitePage({
       {post.otherPosts?.length > 0 && (
         <section className="border-t border-border bg-brand-soft/40">
           <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
-            <h2 className="text-xl font-semibold tracking-tight">
+            <h2 className="text-xl font-semibold">
               À lire aussi
             </h2>
             <ul className="mt-6 grid gap-6 md:grid-cols-2">
@@ -101,10 +103,10 @@ export default async function ActualitePage({
                 <li key={other.slug}>
                   <Link
                     href={`/actualites/${other.slug}`}
-                    className="group flex gap-4 rounded-xl border border-border bg-card p-4 transition hover:border-primary/60"
+                    className={cn(cardClass, cardHoverClass, 'flex-row gap-4 p-4')}
                   >
-                    <div className="relative aspect-square w-24 shrink-0 overflow-hidden rounded-xl bg-muted">
-                      {other.image?.asset?.url && (
+                    {other.image?.asset?.url && (
+                      <div className="relative aspect-square w-24 shrink-0 overflow-hidden rounded-md bg-muted">
                         <Image
                           src={other.image.asset.url}
                           alt={other.title}
@@ -112,8 +114,8 @@ export default async function ActualitePage({
                           sizes="96px"
                           className="object-cover"
                         />
-                      )}
-                    </div>
+                      </div>
+                    )}
                     <div className="min-w-0">
                       <div className="text-xs text-muted-foreground">
                         {other.date}

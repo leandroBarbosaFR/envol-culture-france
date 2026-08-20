@@ -42,12 +42,14 @@ export const homeContactSection = defineType({
       title: 'Bouton secondaire — URL',
       type: 'string',
     }),
+    // Les coordonnées viennent du document « Coordonnées » (siteContact).
+    // Ancien champ conservé mais masqué.
     defineField({
       name: 'channels',
       title: 'Canaux de contact',
       type: 'array',
       of: [{type: 'contactChannel'}],
-      description: 'Email, téléphone, adresse',
+      hidden: true,
     }),
     defineField({
       name: 'socials',

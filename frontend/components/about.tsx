@@ -1,7 +1,7 @@
-import { Heart, Users, Sparkles } from 'lucide-react';
-import { ScrollRevealText } from '@/components/scroll-reveal-text';
+import { Users, Heart, Book } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 
-const ICONS = [Heart, Users, Sparkles];
+const ICONS = [Book, Users, Heart];
 
 type ValueItem = { title: string; body: string };
 
@@ -25,37 +25,28 @@ export function About({ data }: { data?: AboutData }) {
       <div className="mx-auto max-w-6xl px-4 py-20 md:px-6 md:py-28">
         <div className="grid gap-10 md:grid-cols-12 md:gap-12">
           <div className="md:col-span-5">
-            <span className="text-sm font-medium text-brand-deep">
-              {eyebrow}
-            </span>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
-              <ScrollRevealText text={title} />
-            </h2>
-            <p className="mt-5 text-muted-foreground leading-relaxed">
-              {paragraph1}
-            </p>
-            <p className="mt-4 text-muted-foreground leading-relaxed">
-              {paragraph2}
-            </p>
+            <span className="text-sm font-medium text-brand-deep">{eyebrow}</span>
+            <h2 className="mt-3 text-3xl font-semibold md:text-4xl">{title}</h2>
+            <p className="mt-5 leading-relaxed text-muted-foreground">{paragraph1}</p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{paragraph2}</p>
           </div>
 
-          <ul className="grid gap-4 md:col-span-7 md:grid-cols-1">
+          <ul className="grid gap-4 md:col-span-7">
             {values.map(({ title, body }, index) => {
               const Icon = ICONS[index % ICONS.length];
               return (
-                <li
-                  key={title}
-                  className="group flex gap-5 rounded-xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-md hover:shadow-primary/10"
-                >
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-deep">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <h3 className="font-medium">{title}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                      {body}
-                    </p>
-                  </div>
+                <li key={title}>
+                  <Card className="flex-row gap-4 p-5">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-md bg-brand-soft text-brand-deep">
+                      <Icon className="size-5" />
+                    </span>
+                    <div>
+                      <h3 className="font-heading font-medium">{title}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                        {body}
+                      </p>
+                    </div>
+                  </Card>
                 </li>
               );
             })}

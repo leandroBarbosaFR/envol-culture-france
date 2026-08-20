@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
-import { ScrollRevealText } from '@/components/scroll-reveal-text';
+import { ArrowRight } from 'lucide-react';
+import { cardClass, cardHoverClass } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 type Activity = {
   slug: string;
@@ -24,27 +25,24 @@ export function Activities({
   activities = [],
 }: ActivitiesProps) {
   return (
-    <section
-      id="activities"
-      className="border-t border-border bg-brand-soft/40"
-    >
+    <section id="activities" className="border-t border-border bg-brand-soft/40">
       <div className="mx-auto max-w-6xl px-4 py-20 md:px-6 md:py-28">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <span className="text-sm font-medium text-brand-deep">
-              {eyebrow}
-            </span>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
-              <ScrollRevealText text={title ?? ''} />
-            </h2>
+            {eyebrow && (
+              <span className="text-sm font-medium text-brand-deep">{eyebrow}</span>
+            )}
+            <h2 className="mt-3 text-3xl font-semibold md:text-4xl">{title}</h2>
           </div>
-          <Link
-            href="/activites"
-            className="group inline-flex items-center gap-1.5 text-sm font-medium text-brand-deep"
-          >
-            {linkLabel}
-            <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </Link>
+          {linkLabel && (
+            <Link
+              href="/activites"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-deep hover:underline"
+            >
+              {linkLabel}
+              <ArrowRight className="size-4" />
+            </Link>
+          )}
         </div>
 
         <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -52,10 +50,10 @@ export function Activities({
             <li key={activity.slug}>
               <Link
                 href={`/activites/${activity.slug}`}
-                className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card"
+                className={cn(cardClass, cardHoverClass, 'h-full')}
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                  {activity.image?.asset?.url && (
+                {activity.image?.asset?.url && (
+                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                     <Image
                       src={activity.image.asset.url}
                       alt={activity.name}
@@ -63,16 +61,16 @@ export function Activities({
                       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                       className="object-cover"
                     />
-                  )}
-                </div>
+                  </div>
+                )}
                 <div className="flex flex-1 flex-col gap-2 p-5">
-                  <h3 className="font-medium">{activity.name}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <h3 className="font-heading font-medium">{activity.name}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     {activity.tagline}
                   </p>
-                  <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-brand-deep">
+                  <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-brand-deep">
                     Découvrir
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                    <ArrowRight className="size-4" />
                   </span>
                 </div>
               </Link>

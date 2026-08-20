@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PageHeader } from '@/components/page-header';
+import { cardClass, cardHoverClass } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import { client } from '@/lib/sanity/client';
 import { actualitesPageQuery } from '@/lib/sanity/queries';
 
@@ -41,19 +43,19 @@ export default async function ActualitesPage() {
               <li key={post.slug}>
                 <Link
                   href={`/actualites/${post.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition hover:border-primary/60 hover:shadow-md hover:shadow-primary/10"
+                  className={cn(cardClass, cardHoverClass, 'h-full')}
                 >
-                  <div className="relative aspect-video overflow-hidden bg-muted">
-                    {post.image?.asset?.url && (
+                  {post.image?.asset?.url && (
+                    <div className="relative aspect-video overflow-hidden bg-muted">
                       <Image
                         src={post.image.asset.url}
                         alt={post.title}
                         fill
                         sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                        className="object-cover transition duration-500 group-hover:scale-105"
+                        className="object-cover"
                       />
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <div className="flex flex-1 flex-col gap-3 p-5">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       {post.category && (

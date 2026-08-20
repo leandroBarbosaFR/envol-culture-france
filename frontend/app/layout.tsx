@@ -1,19 +1,27 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Inter, Poppins } from 'next/font/google';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { client } from '@/lib/sanity/client';
-import { siteHeaderQuery, siteFooterQuery, seoGlobalQuery } from '@/lib/sanity/queries';
+import {
+  siteHeaderQuery,
+  siteFooterQuery,
+  siteContactQuery,
+  seoGlobalQuery,
+} from '@/lib/sanity/queries';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const poppins = Poppins({
+  variable: '--font-poppins',
   subsets: ['latin'],
+  weight: ['500', '600'],
+  display: 'swap',
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,20 +37,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [header, footer] = await Promise.all([
+  const [header, footer, contact] = await Promise.all([
     client.fetch(siteHeaderQuery),
     client.fetch(siteFooterQuery),
+    client.fetch(siteContactQuery),
   ]);
 
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <SiteHeader header={header} />
         <main className="flex-1">{children}</main>
-        <SiteFooter footer={footer} />
+        <SiteFooter footer={footer} contact={contact} />
       </body>
     </html>
   );
