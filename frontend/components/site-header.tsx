@@ -49,7 +49,7 @@ export function SiteHeader({ header }: { header?: HeaderProps }) {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50">
+      <header className="fixed inset-x-0 top-0 z-50 print:hidden">
         <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-4 md:px-6">
           {/* Mobile */}
           <div className={`${BAR} flex w-full items-center justify-between p-1.5 pl-4 lg:hidden`}>
@@ -125,7 +125,7 @@ function MobileDrawer({
 }) {
   return (
     <div
-      className="fixed inset-0 z-[60] lg:hidden"
+      className="fixed inset-0 z-[60] lg:hidden print:hidden"
       aria-hidden={!open}
       style={{ pointerEvents: open ? 'auto' : 'none' }}
     >

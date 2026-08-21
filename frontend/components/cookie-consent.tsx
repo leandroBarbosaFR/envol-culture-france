@@ -78,7 +78,7 @@ export function CookieConsent({ settings }: { settings: CookieBannerSettings }) 
       role="dialog"
       aria-labelledby="cookie-banner-title"
       aria-describedby="cookie-banner-message"
-      className="fixed inset-x-4 bottom-4 z-50 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-full sm:max-w-md"
+      className="fixed inset-x-4 bottom-4 z-50 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-full sm:max-w-md print:hidden"
     >
       <Card className="p-5 shadow-sm">
         <h2 id="cookie-banner-title" className="font-heading text-base font-semibold">

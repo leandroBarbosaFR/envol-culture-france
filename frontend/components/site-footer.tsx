@@ -51,7 +51,7 @@ export function SiteFooter({
   const hasContact = Boolean(contact?.phone || contact?.email || lines.length);
 
   return (
-    <footer className="border-t border-border bg-background">
+    <footer className="border-t border-border bg-background print:hidden">
       <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.5fr_0.9fr_0.9fr_1.3fr] lg:gap-10">
           <div>

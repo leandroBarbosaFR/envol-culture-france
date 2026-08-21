@@ -91,15 +91,15 @@ function Table({
 }) {
   const wrap = nowrap ? 'whitespace-nowrap' : '';
   return (
-    <div className="mt-6 overflow-hidden rounded-lg border border-border bg-card">
-      <div className="overflow-x-auto">
+    <div className="mt-6 overflow-hidden rounded-lg border border-border bg-card print:rounded-none">
+      <div className="overflow-x-auto print:overflow-visible">
         <table className="w-full text-sm">
           <thead className="bg-brand-soft text-left">
             <tr>
               {head.map((h) => (
                 <th
                   key={h}
-                  className={`px-4 py-3 text-sm font-semibold text-foreground ${wrap}`}
+                  className={`px-4 py-3 text-sm font-semibold text-foreground print:px-2 print:py-1.5 print:text-xs ${wrap}`}
                 >
                   {h}
                 </th>
@@ -112,7 +112,7 @@ function Table({
                 {cells.map((c, j) => (
                   <td
                     key={j}
-                    className={`px-4 py-3 align-top text-foreground/80 ${wrap} ${
+                    className={`px-4 py-3 align-top text-foreground/80 print:px-2 print:py-1.5 print:text-xs ${wrap} ${
                       j === 0 ? 'font-medium' : ''
                     }`}
                   >

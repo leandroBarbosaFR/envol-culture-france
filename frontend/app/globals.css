@@ -65,6 +65,32 @@
   --radius: 0.5rem;
 }
 
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  html {
+    font-size: 12px;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+  table {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  tr {
+    break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+  a {
+    text-decoration: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

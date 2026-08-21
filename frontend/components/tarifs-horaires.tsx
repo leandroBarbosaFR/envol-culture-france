@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { PageHeader } from '@/components/page-header';
 import { RichContent, hasTable, type RichBlock } from '@/components/rich-content';
+import { PrintButton } from '@/components/print-button';
 import { buttonVariants } from '@/components/ui/button';
 
 export type TarifsHorairesTab = 'tarifs' | 'horaires';
@@ -80,8 +81,12 @@ export function TarifsHoraires({ active, data, fallback }: Props) {
         crumbs={[{ href: current.href, label: current.crumb }]}
       />
 
+      {/* Tables print best in landscape; scoped to this page only. */}
+      <style>{`@media print { @page { size: A4 landscape; } }`}</style>
+
       <section className="bg-background">
-        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16 print:max-w-none print:px-0 print:py-0">
+          <div className="flex flex-wrap items-center justify-between gap-4 print:hidden">
           <nav aria-label="Tarifs ou horaires" className="flex flex-wrap gap-2">
             {order.map((tab) => {
               const t = resolveTab(data, tab);
@@ -98,8 +103,10 @@ export function TarifsHoraires({ active, data, fallback }: Props) {
               );
             })}
           </nav>
+          <PrintButton />
+          </div>
 
-          <div className="mt-10">
+          <div className="mt-10 print:mt-4">
             {current.hasTable && current.content ? (
               <RichContent value={current.content} />
             ) : (

@@ -49,8 +49,8 @@ export function TableBlockView({ value }: { value: TableBlock }) {
   const body = rows.slice(headerCount);
 
   return (
-    <div className="my-8 overflow-hidden rounded-lg border border-border bg-card first:mt-0">
-      <div className="overflow-x-auto">
+    <div className="my-8 overflow-hidden rounded-lg border border-border bg-card first:mt-0 print:my-4 print:rounded-none">
+      <div className="overflow-x-auto print:overflow-visible">
         <table className="w-full text-sm">
           {head.length > 0 && (
             <thead className="bg-brand-soft text-left">
@@ -60,7 +60,7 @@ export function TableBlockView({ value }: { value: TableBlock }) {
                     <th
                       key={cell._key ?? `h-${i}-${j}`}
                       scope="col"
-                      className="px-4 py-3 text-sm font-semibold text-foreground whitespace-nowrap"
+                      className="px-4 py-3 text-sm font-semibold text-foreground whitespace-nowrap print:px-2 print:py-1.5 print:text-xs print:whitespace-normal"
                     >
                       <CellContent cell={cell} />
                     </th>
@@ -75,7 +75,7 @@ export function TableBlockView({ value }: { value: TableBlock }) {
                 {row.cells?.map((cell, j) => (
                   <td
                     key={cell._key ?? `r-${i}-${j}`}
-                    className={`px-4 py-3 align-top text-foreground/80 ${
+                    className={`px-4 py-3 align-top text-foreground/80 print:px-2 print:py-1.5 print:text-xs ${
                       j === 0 ? 'font-medium text-foreground' : ''
                     }`}
                   >
@@ -97,7 +97,7 @@ const richComponents: PortableTextComponents = {
   },
   block: {
     normal: ({ children }) => (
-      <p className="max-w-3xl text-base leading-relaxed text-muted-foreground [&:not(:first-child)]:mt-4">
+      <p className="max-w-3xl text-base leading-relaxed text-muted-foreground [&:not(:first-child)]:mt-4 print:max-w-none print:text-sm">
         {children}
       </p>
     ),
