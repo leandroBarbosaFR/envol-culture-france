@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CookieSettingsButton } from '@/components/cookie-settings-button';
 import { addressLines, phoneHref, type SiteContact } from '@/lib/contact';
 
 type NavItem = { href: string; label: string };
@@ -27,9 +28,11 @@ function realUrl(url?: string | null): string | null {
 export function SiteFooter({
   footer,
   contact,
+  cookieManageLabel = 'Gérer les cookies',
 }: {
   footer?: FooterProps;
   contact?: SiteContact;
+  cookieManageLabel?: string;
 }) {
   const siteName = footer?.siteName ?? 'Envol Culture';
   const tagline = footer?.tagline ?? '';
@@ -130,6 +133,7 @@ export function SiteFooter({
             <a href={privacyUrl} className="hover:text-foreground">
               {privacyLabel}
             </a>
+            <CookieSettingsButton label={cookieManageLabel} />
           </div>
         </div>
       </div>

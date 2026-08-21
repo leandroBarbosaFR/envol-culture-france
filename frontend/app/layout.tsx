@@ -2,11 +2,13 @@ import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
+import { CookieConsent } from '@/components/cookie-consent';
 import { client } from '@/lib/sanity/client';
 import {
   siteHeaderQuery,
   siteFooterQuery,
   siteContactQuery,
+  cookieBannerQuery,
   seoGlobalQuery,
 } from '@/lib/sanity/queries';
 import './globals.css';
@@ -37,10 +39,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [header, footer, contact] = await Promise.all([
+  const [header, footer, contact, cookieBanner] = await Promise.all([
     client.fetch(siteHeaderQuery),
     client.fetch(siteFooterQuery),
     client.fetch(siteContactQuery),
+    client.fetch(cookieBannerQuery),
   ]);
 
   return (
@@ -51,7 +54,12 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <SiteHeader header={header} />
         <main className="flex-1">{children}</main>
-        <SiteFooter footer={footer} contact={contact} />
+        <SiteFooter
+          footer={footer}
+          contact={contact}
+          cookieManageLabel={cookieBanner?.manageLabel ?? undefined}
+        />
+        <CookieConsent settings={cookieBanner} />
       </body>
     </html>
   );

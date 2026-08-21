@@ -21,6 +21,9 @@ export const structure: StructureResolver = (S) =>
                 .title('Coordonnées')
                 .child(S.editor().schemaType('siteContact').documentId('siteContact')),
               S.listItem()
+                .title('Bandeau cookies')
+                .child(S.editor().schemaType('cookieBanner').documentId('cookieBanner')),
+              S.listItem()
                 .title('🔍 SEO global')
                 .child(
                   S.editor()

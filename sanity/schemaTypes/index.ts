@@ -5,6 +5,7 @@ import {activitiesPage} from './documents/activitiesPage'
 import {activity} from './documents/activity'
 import {actualitesPage} from './documents/actualitesPage'
 import {contactPageForm} from './documents/contactPageForm'
+import {cookieBanner} from './documents/cookieBanner'
 import {contactPageInfo} from './documents/contactPageInfo'
 import {heroSection} from './documents/heroSection'
 import {legalPage} from './documents/legalPage'
@@ -55,6 +56,7 @@ export const schemaTypes = [
   newsPost,
 
   // documents — global
+  cookieBanner,
   legalPage,
   pageSeo,
   siteContact,

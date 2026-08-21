@@ -31,3 +31,7 @@ Importé le 2026-08-21. Ré-import (écrase le texte édité dans le Studio !) :
 ```sh
 npx sanity dataset import seed/legal-pages.ndjson --dataset production --replace
 ```
+
+## `cookie-banner.ndjson` — Bandeau cookies
+
+Crée le document `cookieBanner` (textes et boutons du bandeau). Importé le 2026-08-21.

@@ -55,6 +55,24 @@ export const legalPageQuery = groq`
   }
 `;
 
+// ── Bandeau cookies ──────────────────────────────────────────────────────────
+export const cookieBannerQuery = groq`
+  *[_type == "cookieBanner"][0] {
+    title,
+    message,
+    necessaryDescription,
+    analyticsEnabled,
+    analyticsDescription,
+    acknowledgeLabel,
+    acceptLabel,
+    refuseLabel,
+    customizeLabel,
+    saveLabel,
+    policyLinkLabel,
+    manageLabel
+  }
+`;
+
 // ── SEO Global ───────────────────────────────────────────────────────────────
 export const seoGlobalQuery = groq`
   *[_type == "pageSeo" && _id == "seoGlobal"][0] {
