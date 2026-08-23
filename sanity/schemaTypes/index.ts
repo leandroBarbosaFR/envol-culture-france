@@ -5,6 +5,7 @@ import {activitiesPage} from './documents/activitiesPage'
 import {activity} from './documents/activity'
 import {actualitesPage} from './documents/actualitesPage'
 import {contactPageForm} from './documents/contactPageForm'
+import {galeriePage} from './documents/galeriePage'
 import {cookieBanner} from './documents/cookieBanner'
 import {contactPageInfo} from './documents/contactPageInfo'
 import {heroSection} from './documents/heroSection'
@@ -12,6 +13,7 @@ import {legalPage} from './documents/legalPage'
 import {homeAboutSection} from './documents/homeAboutSection'
 import {homeActivitiesSection} from './documents/homeActivitiesSection'
 import {homeContactSection} from './documents/homeContactSection'
+import {homeGallerySection} from './documents/homeGallerySection'
 import {homeNewsSection} from './documents/homeNewsSection'
 import {newsPost} from './documents/newsPost'
 import {pageSeo} from './documents/pageSeo'
@@ -20,6 +22,7 @@ import {siteContact} from './documents/siteContact'
 import {siteHeader} from './documents/siteHeader'
 import {tarifsHorairesPage} from './documents/tarifsHorairesPage'
 import {contactChannel} from './objects/contactChannel'
+import {galleryImage} from './objects/galleryImage'
 import {heroSlide} from './objects/heroSlide'
 import {navItem} from './objects/navItem'
 import {scheduleItem} from './objects/scheduleItem'
@@ -35,6 +38,7 @@ export const schemaTypes = [
   homeAboutSection,
   homeActivitiesSection,
   homeContactSection,
+  homeGallerySection,
   homeNewsSection,
 
   // documents — about sections
@@ -49,6 +53,7 @@ export const schemaTypes = [
   // documents — other pages
   activitiesPage,
   actualitesPage,
+  galeriePage,
   tarifsHorairesPage,
 
   // documents — collections
@@ -65,6 +70,7 @@ export const schemaTypes = [
 
   // objects
   contactChannel,
+  galleryImage,
   heroSlide,
   navItem,
   scheduleItem,

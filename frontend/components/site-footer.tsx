@@ -1,6 +1,8 @@
-import Link from 'next/link';
 import { CookieSettingsButton } from '@/components/cookie-settings-button';
+import { LogoEnvol } from '@/components/logo-envol';
+import { SiteCopyright } from '@/components/site-copyright';
 import { addressLines, phoneHref, type SiteContact } from '@/lib/contact';
+import Link from 'next/link';
 
 type NavItem = { href: string; label: string };
 
@@ -41,7 +43,7 @@ export function SiteFooter({
   const memberColumnTitle = footer?.memberColumnTitle ?? 'Espace adhérent';
   const memberLinks = footer?.memberLinks ?? [];
   const contactColumnTitle = footer?.contactColumnTitle ?? 'Contact';
-  const copyright = footer?.copyright ?? 'Envol — Association loi 1901';
+  const copyright = footer?.copyright ?? '© {year} Envol — Association loi 1901';
   const legalLabel = footer?.legalLabel ?? 'Mentions légales';
   const legalUrl = realUrl(footer?.legalUrl) ?? '/mentions-legales';
   const privacyLabel = footer?.privacyLabel ?? 'Politique de confidentialité';
@@ -51,24 +53,28 @@ export function SiteFooter({
   const hasContact = Boolean(contact?.phone || contact?.email || lines.length);
 
   return (
-    <footer className="border-t border-border bg-background print:hidden">
+    <footer className="bg-brand-deep text-background print:hidden">
       <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.5fr_0.9fr_0.9fr_1.3fr] lg:gap-10">
           <div>
-            <Link href="/" className="font-heading font-semibold">
-              {siteName}
+            <Link
+              href="/"
+              className="inline-block"
+              aria-label={`${siteName} — accueil`}
+            >
+              <LogoEnvol className="h-9 w-auto text-background" />
             </Link>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-background/90">
               {tagline}
             </p>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-foreground">{navColumnTitle}</div>
+            <div className="text-sm font-semibold text-background">{navColumnTitle}</div>
             <ul className="mt-4 space-y-2 text-sm">
               {navLinks.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-muted-foreground hover:text-foreground">
+                  <Link href={item.href} className="text-background/90 hover:text-background">
                     {item.label}
                   </Link>
                 </li>
@@ -77,11 +83,11 @@ export function SiteFooter({
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-foreground">{memberColumnTitle}</div>
+            <div className="text-sm font-semibold text-background">{memberColumnTitle}</div>
             <ul className="mt-4 space-y-2 text-sm">
               {memberLinks.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-muted-foreground hover:text-foreground">
+                  <Link href={item.href} className="text-background/90 hover:text-background">
                     {item.label}
                   </Link>
                 </li>
@@ -91,19 +97,19 @@ export function SiteFooter({
 
           {hasContact && (
             <div>
-              <div className="text-sm font-semibold text-foreground">{contactColumnTitle}</div>
-              <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                {contact?.contactName && <li className="text-foreground">{contact.contactName}</li>}
+              <div className="text-sm font-semibold text-background">{contactColumnTitle}</div>
+              <ul className="mt-4 space-y-2 text-sm text-background/90">
+                {contact?.contactName && <li className="text-background">{contact.contactName}</li>}
                 {contact?.phone && (
                   <li>
-                    <a href={phoneHref(contact.phone)} className="hover:text-foreground">
+                    <a href={phoneHref(contact.phone)} className="hover:text-background">
                       {contact.phone}
                     </a>
                   </li>
                 )}
                 {contact?.email && (
                   <li>
-                    <a href={`mailto:${contact.email}`} className="break-all hover:text-foreground">
+                    <a href={`mailto:${contact.email}`} className="break-all hover:text-background">
                       {contact.email}
                     </a>
                   </li>
@@ -124,13 +130,13 @@ export function SiteFooter({
           )}
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
-          <span>{copyright}</span>
+        <div className="mt-10 flex flex-col gap-3 border-background/25 pt-6 text-xs text-background/90 md:flex-row md:items-center md:justify-between">
+          <SiteCopyright template={copyright} />
           <div className="flex gap-5">
-            <a href={legalUrl} className="hover:text-foreground">
+            <a href={legalUrl} className="hover:text-background">
               {legalLabel}
             </a>
-            <a href={privacyUrl} className="hover:text-foreground">
+            <a href={privacyUrl} className="hover:text-background">
               {privacyLabel}
             </a>
             <CookieSettingsButton label={cookieManageLabel} />

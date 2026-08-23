@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, List, X } from '@phosphor-icons/react/ssr';
+import { LogoEnvol } from '@/components/logo-envol';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -53,8 +54,8 @@ export function SiteHeader({ header }: { header?: HeaderProps }) {
         <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-4 md:px-6">
           {/* Mobile */}
           <div className={`${BAR} flex w-full items-center justify-between p-1.5 pl-4 lg:hidden`}>
-            <Link href="/" className="py-2 font-heading font-semibold text-foreground">
-              {siteName}
+            <Link href="/" className="py-2" aria-label={`${siteName} — accueil`}>
+              <LogoEnvol className="h-8 w-auto text-brand-deep" />
             </Link>
             <button
               type="button"
@@ -63,14 +64,14 @@ export function SiteHeader({ header }: { header?: HeaderProps }) {
               onClick={() => setOpen(true)}
               className="grid size-10 place-items-center rounded-md text-foreground transition-colors hover:bg-muted"
             >
-              <Menu className="size-5" />
+              <List className="size-5" />
             </button>
           </div>
 
           {/* Desktop */}
           <div className={`${BAR} hidden items-center gap-1 p-1.5 lg:flex`}>
-            <Link href="/" className="px-3 py-2 font-heading font-semibold text-foreground">
-              {siteName}
+            <Link href="/" className="px-3 py-2" aria-label={`${siteName} — accueil`}>
+              <LogoEnvol className="h-8 w-auto text-brand-deep" />
             </Link>
             <span aria-hidden className="mx-1 h-5 w-px bg-border" />
             <nav className="flex items-center gap-0.5">
@@ -135,7 +136,8 @@ function MobileDrawer({
         }`}
       >
         <div className="flex items-center justify-between px-5 py-4">
-          <span className="font-heading font-semibold">{siteName}</span>
+          <LogoEnvol className="h-7 w-auto text-brand" />
+          <span className="sr-only">{siteName}</span>
           <button
             type="button"
             aria-label="Fermer le menu"

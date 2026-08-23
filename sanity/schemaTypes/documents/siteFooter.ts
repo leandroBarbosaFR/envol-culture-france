@@ -53,7 +53,9 @@ export const siteFooter = defineType({
       name: 'copyright',
       title: 'Mention de copyright',
       type: 'string',
-      description: 'Ex: "Envol — Association loi 1901"',
+      description:
+        'Ex: "© {year} Envol — Association loi 1901". Le repère {year} est remplacé par ' +
+        "l'année en cours à l'affichage — n'écrivez pas l'année en dur.",
     }),
     defineField({
       name: 'legalLabel',

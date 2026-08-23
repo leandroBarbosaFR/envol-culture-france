@@ -30,6 +30,21 @@ export const siteFooterQuery = groq`
   }
 `;
 
+// ── Galerie ─────────────────────────────────────────────────────────────────
+export const galeriePageQuery = groq`
+  *[_type == "galeriePage"][0] {
+    eyebrow,
+    title,
+    description,
+    images[] {
+      _key,
+      alt,
+      caption,
+      image { asset->{ url } }
+    }
+  }
+`;
+
 // ── Coordonnées (source unique : pied de page, contact, accueil) ─────────────
 export const siteContactQuery = groq`
   *[_type == "siteContact"][0] {
@@ -115,26 +130,16 @@ export const homePageQuery = groq`
       title,
       linkLabel,
     },
-    "contact": *[_type == "homeContactSection"][0] {
+    "galleryIntro": *[_type == "homeGallerySection"][0] {
       eyebrow,
       title,
-      description,
-      primaryButtonLabel,
-      primaryButtonUrl,
-      secondaryButtonLabel,
-      secondaryButtonUrl,
-      socials[] { platform, href }
+      linkLabel,
     },
-    "siteContact": *[_type == "siteContact"][0] {
-      organisationName,
-      contactName,
-      phone,
-      email,
-      addressLine1,
-      addressLine2,
-      postalCode,
-      city,
-      openingHours
+    "galleryImages": *[_type == "galeriePage"][0].images[0...8] {
+      _key,
+      alt,
+      caption,
+      image { asset->{ url } }
     },
     "recentNews": *[_type == "newsPost"] | order(date desc) [0...3] {
       title,
@@ -292,6 +297,7 @@ export const contactPageQuery = groq`
 // ── Tarifs & Horaires Page (single page, two tabs) ───────────────────────────
 export const tarifsHorairesPageQuery = groq`
   *[_type == "tarifsHorairesPage"][0] {
+    season,
     tarifsTabLabel,
     tarifsEyebrow,
     tarifsTitle,

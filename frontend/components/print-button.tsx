@@ -1,6 +1,6 @@
 'use client';
 
-import { Printer } from 'lucide-react';
+import { Printer } from '@phosphor-icons/react/ssr';
 import { Button } from '@/components/ui/button';
 
 /** Triggers the browser print dialog; hidden on the printout itself. */

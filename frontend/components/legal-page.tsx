@@ -3,7 +3,7 @@ import { PageHeader } from '@/components/page-header';
 import { RichContent, type RichBlock } from '@/components/rich-content';
 import { Card } from '@/components/ui/card';
 import { addressLines, phoneHref, type SiteContact } from '@/lib/contact';
-import { client } from '@/lib/sanity/client';
+import { sanityFetch } from '@/lib/sanity/live';
 import { legalPageQuery, siteContactQuery } from '@/lib/sanity/queries';
 
 export type LegalPageId = 'mentionsLegales' | 'politiqueConfidentialite';
@@ -24,7 +24,8 @@ const ROUTES: Record<LegalPageId, { href: string; fallbackTitle: string }> = {
 };
 
 export async function fetchLegalPage(id: LegalPageId): Promise<LegalPageDoc> {
-  return client.fetch(legalPageQuery, { id });
+  const { data } = await sanityFetch({ query: legalPageQuery, params: { id } });
+  return data;
 }
 
 function formatDate(iso?: string | null): string | null {
@@ -37,9 +38,9 @@ function formatDate(iso?: string | null): string | null {
 
 /** Shared renderer for the two legal pages (content edited in the Studio → Pages légales). */
 export async function LegalPage({ id }: { id: LegalPageId }) {
-  const [doc, contact] = await Promise.all([
+  const [doc, { data: contact }] = await Promise.all([
     fetchLegalPage(id),
-    client.fetch(siteContactQuery) as Promise<SiteContact>,
+    sanityFetch({ query: siteContactQuery }) as Promise<{ data: SiteContact }>,
   ]);
   if (!doc) notFound();
 

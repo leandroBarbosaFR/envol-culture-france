@@ -73,6 +73,13 @@ export const structure: StructureResolver = (S) =>
                   S.editor().schemaType('homeNewsSection').documentId('homeNewsSection'),
                 ),
               S.listItem()
+                .title('Section Galerie')
+                .child(
+                  S.editor()
+                    .schemaType('homeGallerySection')
+                    .documentId('homeGallerySection'),
+                ),
+              S.listItem()
                 .title('Section Contact')
                 .child(
                   S.editor().schemaType('homeContactSection').documentId('homeContactSection'),
@@ -155,6 +162,28 @@ export const structure: StructureResolver = (S) =>
               S.listItem()
                 .title('Articles')
                 .child(S.documentTypeList('newsPost').title('Articles')),
+            ]),
+        ),
+
+      // ── Galerie ──────────────────────────────────────────────────────────────
+      S.listItem()
+        .title('Galerie')
+        .child(
+          S.list()
+            .title('Galerie')
+            .items([
+              S.listItem()
+                .title('🔍 SEO')
+                .child(
+                  S.editor()
+                    .schemaType('pageSeo')
+                    .documentId('seoGalerie')
+                    .title('SEO — Galerie'),
+                ),
+              S.divider(),
+              S.listItem()
+                .title('Contenu de la page')
+                .child(S.editor().schemaType('galeriePage').documentId('galeriePage')),
             ]),
         ),
 

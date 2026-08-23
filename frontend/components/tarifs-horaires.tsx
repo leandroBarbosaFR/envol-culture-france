@@ -7,6 +7,7 @@ import { buttonVariants } from '@/components/ui/button';
 export type TarifsHorairesTab = 'tarifs' | 'horaires';
 
 export type TarifsHorairesData = {
+  season?: string | null;
   tarifsTabLabel?: string | null;
   tarifsEyebrow?: string | null;
   tarifsTitle?: string | null;
@@ -70,6 +71,7 @@ type Props = {
 
 export function TarifsHoraires({ active, data, fallback }: Props) {
   const current = resolveTab(data, active);
+  const season = data?.season?.trim();
   const order: TarifsHorairesTab[] = ['tarifs', 'horaires'];
 
   return (
@@ -79,6 +81,7 @@ export function TarifsHoraires({ active, data, fallback }: Props) {
         title={current.title}
         description={current.description}
         crumbs={[{ href: current.href, label: current.crumb }]}
+        badge={season}
       />
 
       {/* Tables print best in landscape; scoped to this page only. */}

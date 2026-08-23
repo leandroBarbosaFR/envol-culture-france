@@ -1,4 +1,4 @@
-import { Clock, Mail, MapPin, Phone } from 'lucide-react';
+import { Clock, Envelope, MapPin, Phone } from '@phosphor-icons/react/ssr';
 import { cardClass, cardHoverClass } from '@/components/ui/card';
 import { contactChannels, type ContactChannel, type SiteContact } from '@/lib/contact';
 import { cn } from '@/lib/utils';
@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 const ICONS: Record<ContactChannel['kind'], React.FC<React.SVGProps<SVGSVGElement>>> = {
   address: MapPin,
   phone: Phone,
-  email: Mail,
+  email: Envelope,
   hours: Clock,
 };
 

@@ -1,17 +1,18 @@
-import type { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { ArrowLeft, Check } from 'lucide-react';
 import { PageHeader } from '@/components/page-header';
 import { hasTable } from '@/components/rich-content';
 import { buttonVariants } from '@/components/ui/button';
 import { client } from '@/lib/sanity/client';
+import { sanityFetch } from '@/lib/sanity/live';
 import {
   activityBySlugQuery,
   activitySlugsQuery,
   tarifsHorairesPageQuery,
 } from '@/lib/sanity/queries';
+import { ArrowLeft, Check } from '@phosphor-icons/react/ssr';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 type Params = { slug: string };
 
@@ -32,7 +33,9 @@ type TarifItem = {
 };
 
 export async function generateStaticParams(): Promise<Params[]> {
-  const activities = await client.fetch(activitySlugsQuery);
+  const activities = await client
+    .withConfig({ useCdn: false })
+    .fetch(activitySlugsQuery);
   return activities.map(({ slug }: { slug: string }) => ({ slug }));
 }
 
@@ -42,7 +45,10 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const activity = await client.fetch(activityBySlugQuery, { slug });
+  const { data: activity } = await sanityFetch({
+    query: activityBySlugQuery,
+    params: { slug },
+  });
   if (!activity) return {};
   return {
     title: `${activity.name} · Envol Culture en France`,
@@ -56,9 +62,9 @@ export default async function ActivityPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const [activity, tarifsHoraires] = await Promise.all([
-    client.fetch(activityBySlugQuery, { slug }),
-    client.fetch(tarifsHorairesPageQuery),
+  const [{ data: activity }, { data: tarifsHoraires }] = await Promise.all([
+    sanityFetch({ query: activityBySlugQuery, params: { slug } }),
+    sanityFetch({ query: tarifsHorairesPageQuery }),
   ]);
   if (!activity) notFound();
 

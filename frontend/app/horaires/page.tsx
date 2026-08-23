@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { LegacyHorairesTables } from '@/components/legacy-activity-tables';
 import { TarifsHoraires, resolveTab } from '@/components/tarifs-horaires';
-import { client } from '@/lib/sanity/client';
+import { sanityFetch } from '@/lib/sanity/live';
 import { horairesPageQuery, tarifsHorairesPageQuery } from '@/lib/sanity/queries';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch(tarifsHorairesPageQuery);
+  const data = (await sanityFetch({ query: tarifsHorairesPageQuery })).data;
   const tab = resolveTab(data, 'horaires');
   return {
     title: `${tab.title} · Envol Culture en France`,
@@ -14,10 +14,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HorairesPage() {
-  const data = await client.fetch(tarifsHorairesPageQuery);
+  const data = (await sanityFetch({ query: tarifsHorairesPageQuery })).data;
   const tab = resolveTab(data, 'horaires');
   // Transitional: until the CMS table is filled, keep showing the per-activity schedule.
-  const legacy = tab.hasTable ? null : await client.fetch(horairesPageQuery);
+  const legacy = tab.hasTable ? null : (await sanityFetch({ query: horairesPageQuery })).data;
 
   return (
     <TarifsHoraires

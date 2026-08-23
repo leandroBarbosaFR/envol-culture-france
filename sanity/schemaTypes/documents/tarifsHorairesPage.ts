@@ -41,6 +41,18 @@ export const tarifsHorairesPage = defineType({
     {name: 'horaires', title: 'Horaires'},
   ],
   fields: [
+    // ── Commun aux deux onglets ──────────────────────────────────────────────
+    defineField({
+      name: 'season',
+      title: 'Saison',
+      type: 'string',
+      // Shown in both tabs: it labels the whole page, not one of them.
+      group: ['tarifs', 'horaires'],
+      description:
+        'Ex: "2026 / 2027". Affichée en étiquette au-dessus des tableaux, ' +
+        "et conservée à l'impression. Laisser vide pour ne rien afficher.",
+    }),
+
     // ── Onglet Tarifs ────────────────────────────────────────────────────────
     defineField({
       name: 'tarifsTabLabel',

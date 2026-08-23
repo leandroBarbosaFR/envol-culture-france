@@ -1,13 +1,13 @@
-import { client } from '@/lib/sanity/client';
+import { sanityFetch } from '@/lib/sanity/live';
 import { homePageQuery } from '@/lib/sanity/queries';
 import { Hero } from '@/components/hero';
 import { About } from '@/components/about';
 import { Activities } from '@/components/activities';
 import { News } from '@/components/news';
-import { Contact } from '@/components/contact';
+import { GalleryStrip } from '@/components/gallery-strip';
 
 export default async function HomePage() {
-  const data = await client.fetch(homePageQuery);
+  const data = (await sanityFetch({ query: homePageQuery })).data;
 
   return (
     <>
@@ -25,7 +25,12 @@ export default async function HomePage() {
         linkLabel={data?.newsIntro?.linkLabel}
         posts={data?.recentNews}
       />
-      <Contact data={data?.contact} siteContact={data?.siteContact} />
+      <GalleryStrip
+        eyebrow={data?.galleryIntro?.eyebrow}
+        title={data?.galleryIntro?.title}
+        linkLabel={data?.galleryIntro?.linkLabel}
+        photos={data?.galleryImages}
+      />
     </>
   );
 }

@@ -3,7 +3,7 @@ import { Inter, Poppins } from 'next/font/google';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { CookieConsent } from '@/components/cookie-consent';
-import { client } from '@/lib/sanity/client';
+import { sanityFetch, SanityLive } from '@/lib/sanity/live';
 import {
   siteHeaderQuery,
   siteFooterQuery,
@@ -27,7 +27,7 @@ const poppins = Poppins({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await client.fetch(seoGlobalQuery);
+  const { data: seo } = await sanityFetch({ query: seoGlobalQuery, stega: false });
   return {
     title: seo?.metaTitle ?? 'Envol Culture en France',
     description: seo?.metaDescription ?? '',
@@ -39,11 +39,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [header, footer, contact, cookieBanner] = await Promise.all([
-    client.fetch(siteHeaderQuery),
-    client.fetch(siteFooterQuery),
-    client.fetch(siteContactQuery),
-    client.fetch(cookieBannerQuery),
+  const [
+    { data: header },
+    { data: footer },
+    { data: contact },
+    { data: cookieBanner },
+  ] = await Promise.all([
+    sanityFetch({ query: siteHeaderQuery }),
+    sanityFetch({ query: siteFooterQuery }),
+    sanityFetch({ query: siteContactQuery }),
+    sanityFetch({ query: cookieBannerQuery }),
   ]);
 
   return (
@@ -60,6 +65,7 @@ export default async function RootLayout({
           cookieManageLabel={cookieBanner?.manageLabel ?? undefined}
         />
         <CookieConsent settings={cookieBanner} />
+        <SanityLive />
       </body>
     </html>
   );

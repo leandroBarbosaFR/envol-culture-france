@@ -1,12 +1,10 @@
+import { MediaCardOverlay } from '@/components/media-card-overlay';
+import { PageHeader } from '@/components/page-header';
+import { sanityFetch } from '@/lib/sanity/live';
+import { activitiesPageQuery } from '@/lib/sanity/queries';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
-import { PageHeader } from '@/components/page-header';
-import { cardClass, cardHoverClass } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
-import { client } from '@/lib/sanity/client';
-import { activitiesPageQuery } from '@/lib/sanity/queries';
 
 type Activity = {
   slug: string;
@@ -17,7 +15,7 @@ type Activity = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch(activitiesPageQuery);
+  const data = (await sanityFetch({ query: activitiesPageQuery })).data;
   return {
     title: `${data?.title ?? 'Activités'} · Envol Culture en France`,
     description: data?.description,
@@ -25,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ActivitesPage() {
-  const data = await client.fetch(activitiesPageQuery);
+  const data = (await sanityFetch({ query: activitiesPageQuery })).data;
 
   return (
     <>
@@ -38,41 +36,30 @@ export default async function ActivitesPage() {
 
       <section className="bg-background">
         <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-          <ul className="grid gap-6 md:grid-cols-2">
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {data?.activities?.map((activity: Activity) => (
               <li key={activity.slug}>
                 <Link
                   href={`/activites/${activity.slug}`}
-                  className={cn(cardClass, cardHoverClass, 'group h-full')}
+                  className="group relative block aspect-[4/5] overflow-hidden rounded-lg bg-muted"
                 >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                    {activity.image?.asset?.url && (
-                      <Image
-                        src={activity.image.asset.url}
-                        alt={activity.name}
-                        fill
-                        sizes="(min-width: 768px) 50vw, 100vw"
-                        className="object-cover"
-                        priority
-                      />
-                    )}
-                  </div>
-                  <div className="flex flex-1 flex-col gap-3 p-6">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <h2 className="text-xl font-medium">{activity.name}</h2>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {activity.tagline}
-                        </p>
-                      </div>
-                      <span className="grid size-9 shrink-0 place-items-center rounded-md bg-brand-soft text-brand-deep transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                        <ArrowUpRight className="size-4" />
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                      {activity.description}
-                    </p>
-                  </div>
+                  {activity.image?.asset?.url && (
+                    <Image
+                      src={activity.image.asset.url}
+                      alt={activity.name}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none"
+                      priority
+                    />
+                  )}
+                  <MediaCardOverlay
+                    title={activity.name}
+                    meta={activity.tagline}
+                    body={activity.description}
+                    cta="Découvrir"
+                    bandHeight="h-[34%]"
+                  />
                 </Link>
               </li>
             ))}

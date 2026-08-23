@@ -1,11 +1,10 @@
+import { MediaCardOverlay } from '@/components/media-card-overlay';
+import { PageHeader } from '@/components/page-header';
+import { sanityFetch } from '@/lib/sanity/live';
+import { actualitesPageQuery } from '@/lib/sanity/queries';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PageHeader } from '@/components/page-header';
-import { cardClass, cardHoverClass } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
-import { client } from '@/lib/sanity/client';
-import { actualitesPageQuery } from '@/lib/sanity/queries';
 
 type NewsPost = {
   slug: string;
@@ -17,7 +16,7 @@ type NewsPost = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch(actualitesPageQuery);
+  const data = (await sanityFetch({ query: actualitesPageQuery })).data;
   return {
     title: `${data?.title ?? 'Actualités'} · Envol Culture en France`,
     description: data?.description,
@@ -25,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ActualitesPage() {
-  const data = await client.fetch(actualitesPageQuery);
+  const data = (await sanityFetch({ query: actualitesPageQuery })).data;
 
   return (
     <>
@@ -43,38 +42,24 @@ export default async function ActualitesPage() {
               <li key={post.slug}>
                 <Link
                   href={`/actualites/${post.slug}`}
-                  className={cn(cardClass, cardHoverClass, 'h-full')}
+                  className="group relative block aspect-[3/2] overflow-hidden rounded-lg bg-muted"
                 >
                   {post.image?.asset?.url && (
-                    <div className="relative aspect-video overflow-hidden bg-muted">
-                      <Image
-                        src={post.image.asset.url}
-                        alt={post.title}
-                        fill
-                        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                        className="object-cover"
-                      />
-                    </div>
+                    <Image
+                      src={post.image.asset.url}
+                      alt={post.title}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none"
+                    />
                   )}
-                  <div className="flex flex-1 flex-col gap-3 p-5">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      {post.category && (
-                        <>
-                          <span className="font-medium text-brand-deep">
-                            {post.category}
-                          </span>
-                          <span>·</span>
-                        </>
-                      )}
-                      <span>{post.date}</span>
-                    </div>
-                    <h2 className="text-lg font-medium leading-snug">
-                      {post.title}
-                    </h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {post.excerpt}
-                    </p>
-                  </div>
+                  <MediaCardOverlay
+                    title={post.title}
+                    meta={[post.category, post.date].filter(Boolean).join(' · ')}
+                    body={post.excerpt}
+                    cta="Lire l'article"
+                    bandHeight="h-0"
+                  />
                 </Link>
               </li>
             ))}

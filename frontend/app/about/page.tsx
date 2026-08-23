@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { Heart, Users, Sparkles, Award } from 'lucide-react';
+import { Heart, Users, Sparkle, Medal } from '@phosphor-icons/react/ssr';
 import { PageHeader } from '@/components/page-header';
 import { Card } from '@/components/ui/card';
-import { client } from '@/lib/sanity/client';
+import { sanityFetch } from '@/lib/sanity/live';
 import { aboutPageQuery } from '@/lib/sanity/queries';
 
-const ICONS = [Heart, Users, Sparkles, Award];
+const ICONS = [Heart, Users, Sparkle, Medal];
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch(aboutPageQuery);
+  const data = (await sanityFetch({ query: aboutPageQuery })).data;
   return {
     title: `${data?.intro?.title ?? 'Qui sommes-nous'} · Envol Culture en France`,
     description: data?.intro?.description,
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const data = await client.fetch(aboutPageQuery);
+  const data = (await sanityFetch({ query: aboutPageQuery })).data;
 
   return (
     <>

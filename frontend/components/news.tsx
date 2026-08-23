@@ -1,8 +1,7 @@
+import { ArrowRight } from '@phosphor-icons/react/ssr';
+import { MediaCardOverlay } from '@/components/media-card-overlay';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import { cardClass, cardHoverClass } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 
 type NewsPost = {
   slug: string;
@@ -22,8 +21,8 @@ type NewsProps = {
 
 export function News({ eyebrow, title, linkLabel, posts = [] }: NewsProps) {
   return (
-    <section id="news" className="border-t border-border bg-background">
-      <div className="mx-auto max-w-6xl px-4 py-20 md:px-6 md:py-28">
+    <section id="news" className="bg-background">
+      <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             {eyebrow && (
@@ -47,34 +46,25 @@ export function News({ eyebrow, title, linkLabel, posts = [] }: NewsProps) {
             <li key={post.slug}>
               <Link
                 href={`/actualites/${post.slug}`}
-                className={cn(cardClass, cardHoverClass, 'h-full')}
+                className="group relative block aspect-[3/2] overflow-hidden rounded-lg bg-muted"
               >
                 {post.image?.asset?.url && (
-                  <div className="relative aspect-video overflow-hidden bg-muted">
-                    <Image
-                      src={post.image.asset.url}
-                      alt={post.title}
-                      fill
-                      sizes="(min-width: 768px) 33vw, 100vw"
-                      className="object-cover"
-                    />
-                  </div>
+                  <Image
+                    src={post.image.asset.url}
+                    alt={post.title}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none"
+                  />
                 )}
-                <div className="flex flex-1 flex-col gap-3 p-5">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    {post.category && (
-                      <>
-                        <span className="font-medium text-brand-deep">{post.category}</span>
-                        <span>·</span>
-                      </>
-                    )}
-                    <span>{post.date}</span>
-                  </div>
-                  <h3 className="font-heading text-lg font-medium leading-snug">{post.title}</h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {post.excerpt}
-                  </p>
-                </div>
+
+                <MediaCardOverlay
+                  title={post.title}
+                  meta={[post.category, post.date].filter(Boolean).join(' · ')}
+                  body={post.excerpt}
+                  cta="Lire l'article"
+                  bandHeight="h-0"
+                />
               </Link>
             </li>
           ))}

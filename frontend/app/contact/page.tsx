@@ -4,11 +4,11 @@ import { Field } from '@/components/form-field';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { client } from '@/lib/sanity/client';
+import { sanityFetch } from '@/lib/sanity/live';
 import { contactPageQuery } from '@/lib/sanity/queries';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch(contactPageQuery);
+  const data = (await sanityFetch({ query: contactPageQuery })).data;
   return {
     title: `${data?.info?.title ?? 'Contact'} · Envol Culture en France`,
     description: data?.info?.description,
@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const data = await client.fetch(contactPageQuery);
+  const data = (await sanityFetch({ query: contactPageQuery })).data;
 
   return (
     <>

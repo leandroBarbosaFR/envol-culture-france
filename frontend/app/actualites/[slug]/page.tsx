@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from '@phosphor-icons/react/ssr';
 import { PageHeader } from '@/components/page-header';
 import { cardClass, cardHoverClass } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { client } from '@/lib/sanity/client';
+import { sanityFetch } from '@/lib/sanity/live';
 import { newsPostBySlugQuery, newsSlugsQuery } from '@/lib/sanity/queries';
 import { PortableText } from '@portabletext/react';
 
@@ -20,7 +21,7 @@ type OtherPost = {
 };
 
 export async function generateStaticParams(): Promise<Params[]> {
-  const posts = await client.fetch(newsSlugsQuery);
+  const posts = await client.withConfig({ useCdn: false }).fetch(newsSlugsQuery);
   return posts.map(({ slug }: { slug: string }) => ({ slug }));
 }
 
@@ -30,7 +31,10 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await client.fetch(newsPostBySlugQuery, { slug });
+  const { data: post } = await sanityFetch({
+    query: newsPostBySlugQuery,
+    params: { slug },
+  });
   if (!post) return {};
   return {
     title: `${post.title} · Envol Culture en France`,
@@ -44,7 +48,10 @@ export default async function ActualitePage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const post = await client.fetch(newsPostBySlugQuery, { slug });
+  const { data: post } = await sanityFetch({
+    query: newsPostBySlugQuery,
+    params: { slug },
+  });
   if (!post) notFound();
 
   return (
