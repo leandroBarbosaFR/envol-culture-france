@@ -203,6 +203,8 @@ export const activityBySlugQuery = groq`
     tagline,
     description,
     image { asset->{ url } },
+    body,
+    highlightsTitle,
     highlights,
     scheduleItems[] {
       activity,

@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/page-header';
-import { hasTable } from '@/components/rich-content';
+import { RichContent, hasTable } from '@/components/rich-content';
 import { buttonVariants } from '@/components/ui/button';
 import { client } from '@/lib/sanity/client';
 import { sanityFetch } from '@/lib/sanity/live';
@@ -104,7 +104,7 @@ export default async function ActivityPage({
           {activity.highlights?.length > 0 && (
             <div className="md:col-span-5">
               <h2 className="text-2xl font-semibold">
-                Ce qu&apos;il faut savoir
+                {activity.highlightsTitle ?? "Ce qu'il faut savoir"}
               </h2>
               <ul className="mt-5 space-y-3">
                 {activity.highlights.map((h: string) => (
@@ -118,6 +118,14 @@ export default async function ActivityPage({
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {activity.body?.length > 0 && (
+            <div className="md:col-span-12">
+              <div className="max-w-3xl">
+                <RichContent value={activity.body} />
+              </div>
             </div>
           )}
         </div>

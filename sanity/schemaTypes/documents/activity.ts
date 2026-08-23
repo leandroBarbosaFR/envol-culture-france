@@ -1,5 +1,5 @@
 // sanity/schemaTypes/documents/activity.ts
-import {defineType, defineField} from 'sanity'
+import {defineType, defineField, defineArrayMember} from 'sanity'
 
 export const activity = defineType({
   name: 'activity',
@@ -35,6 +35,50 @@ export const activity = defineType({
       title: 'Image',
       type: 'image',
       options: {hotspot: true},
+    }),
+    defineField({
+      name: 'body',
+      title: 'Contenu détaillé',
+      type: 'array',
+      description:
+        "Texte long affiché sous l'image sur la page de l'activité : déroulé des " +
+        'cours, niveaux, matériel… Laisser vide pour ne rien afficher.',
+      of: [
+        defineArrayMember({
+          type: 'block',
+          styles: [
+            {title: 'Normal', value: 'normal'},
+            {title: 'Titre de section', value: 'h2'},
+            {title: 'Sous-titre', value: 'h3'},
+          ],
+          lists: [
+            {title: 'Liste à puces', value: 'bullet'},
+            {title: 'Liste numérotée', value: 'number'},
+          ],
+          marks: {
+            decorators: [
+              {title: 'Gras', value: 'strong'},
+              {title: 'Italique', value: 'em'},
+            ],
+            annotations: [
+              defineArrayMember({
+                name: 'link',
+                title: 'Lien',
+                type: 'object',
+                fields: [
+                  defineField({
+                    name: 'href',
+                    title: 'URL',
+                    type: 'url',
+                    validation: (R) =>
+                      R.uri({scheme: ['http', 'https', 'mailto', 'tel'], allowRelative: true}),
+                  }),
+                ],
+              }),
+            ],
+          },
+        }),
+      ],
     }),
     defineField({
       name: 'highlightsTitle',
