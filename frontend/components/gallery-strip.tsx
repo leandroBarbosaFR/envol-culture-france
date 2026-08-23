@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { CarouselRow } from '@/components/carousel-row';
 import { ArrowRight } from '@phosphor-icons/react/ssr';
 import { MediaCardOverlay } from '@/components/media-card-overlay';
 
@@ -34,7 +35,7 @@ export function GalleryStrip({
 
   return (
     <section id="gallery" className="bg-background">
-      <div className="mx-auto max-w-6xl px-4 pt-16 md:px-6 md:pt-20">
+      <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="text-sm font-medium text-brand-deep">{label}</span>
@@ -48,16 +49,8 @@ export function GalleryStrip({
             <ArrowRight className="size-4" />
           </Link>
         </div>
-      </div>
 
-      {/*
-        Full-bleed scroller: the row runs past the container so the next photo
-        peeks in from the edge, which is what signals it scrolls. Padding on the
-        list keeps the first card aligned with the heading above, and the
-        matching scroll-padding is what stops snap-start from scrolling straight
-        past that padding and knocking the first card out of alignment.
-      */}
-      <ul className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-16 scroll-px-4 md:px-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))] md:pb-20 md:scroll-px-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))]">
+        <CarouselRow label="Galerie" className="mt-12">
         {shown.map((photo) => (
           <li key={photo._key} className="w-56 shrink-0 snap-start md:w-64">
             <Link
@@ -79,7 +72,8 @@ export function GalleryStrip({
             </Link>
           </li>
         ))}
-      </ul>
+        </CarouselRow>
+      </div>
     </section>
   );
 }

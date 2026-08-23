@@ -5,8 +5,10 @@ import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
+/* Member-only screen: the title template adds the site name; keep it out of search. */
 export const metadata: Metadata = {
-  title: "S'inscrire · Envol Culture en France",
+  title: "S'inscrire",
+  robots: { index: false, follow: true },
 };
 
 export default function InscriptionPage() {

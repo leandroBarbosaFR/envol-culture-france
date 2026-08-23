@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/page-header';
 import { sanityFetch } from '@/lib/sanity/live';
 import { actualitesPageQuery } from '@/lib/sanity/queries';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -17,10 +18,11 @@ type NewsPost = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = (await sanityFetch({ query: actualitesPageQuery })).data;
-  return {
-    title: `${data?.title ?? 'Actualités'} · Envol Culture en France`,
+  return buildMetadata({
+    title: data?.title ?? 'Actualités',
     description: data?.description,
-  };
+    path: '/actualites',
+  });
 }
 
 export default async function ActualitesPage() {

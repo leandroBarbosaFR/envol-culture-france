@@ -1,6 +1,7 @@
 import { ArrowRight } from '@phosphor-icons/react/ssr';
 import { MediaCardOverlay } from '@/components/media-card-overlay';
 import Image from 'next/image';
+import { CarouselRow } from '@/components/carousel-row';
 import Link from 'next/link';
 
 type NewsPost = {
@@ -41,9 +42,9 @@ export function News({ eyebrow, title, linkLabel, posts = [] }: NewsProps) {
           )}
         </div>
 
-        <ul className="mt-12 grid gap-6 md:grid-cols-3">
+        <CarouselRow label="Actualités" className="mt-12">
           {posts.map((post) => (
-            <li key={post.slug}>
+          <li key={post.slug} className="w-80 shrink-0 snap-start md:w-96">
               <Link
                 href={`/actualites/${post.slug}`}
                 className="group relative block aspect-[3/2] overflow-hidden rounded-lg bg-muted"
@@ -68,7 +69,7 @@ export function News({ eyebrow, title, linkLabel, posts = [] }: NewsProps) {
               </Link>
             </li>
           ))}
-        </ul>
+        </CarouselRow>
       </div>
     </section>
   );

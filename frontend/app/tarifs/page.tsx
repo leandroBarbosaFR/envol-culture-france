@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import { LegacyTarifsTables } from '@/components/legacy-activity-tables';
 import { TarifsHoraires, resolveTab } from '@/components/tarifs-horaires';
 import { sanityFetch } from '@/lib/sanity/live';
@@ -7,10 +8,11 @@ import { tarifsHorairesPageQuery, tarifsPageQuery } from '@/lib/sanity/queries';
 export async function generateMetadata(): Promise<Metadata> {
   const data = (await sanityFetch({ query: tarifsHorairesPageQuery })).data;
   const tab = resolveTab(data, 'tarifs');
-  return {
-    title: `${tab.title} · Envol Culture en France`,
+  return buildMetadata({
+    title: tab.title,
     description: tab.description,
-  };
+    path: '/tarifs',
+  });
 }
 
 export default async function TarifsPage() {

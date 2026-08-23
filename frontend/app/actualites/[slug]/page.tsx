@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -36,10 +37,15 @@ export async function generateMetadata({
     params: { slug },
   });
   if (!post) return {};
-  return {
-    title: `${post.title} · Envol Culture en France`,
+  return buildMetadata({
+    title: post.title,
     description: post.excerpt,
-  };
+    path: `/actualites/${slug}`,
+    image: post.image?.asset?.url,
+    // An article, not a page: this is what drives the richer social card.
+    type: 'article',
+    publishedTime: post.date,
+  });
 }
 
 export default async function ActualitePage({

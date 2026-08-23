@@ -10,6 +10,7 @@ import {
 } from '@/lib/sanity/queries';
 import { ArrowLeft, Check } from '@phosphor-icons/react/ssr';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -50,10 +51,12 @@ export async function generateMetadata({
     params: { slug },
   });
   if (!activity) return {};
-  return {
-    title: `${activity.name} · Envol Culture en France`,
-    description: activity.description,
-  };
+  return buildMetadata({
+    title: activity.name,
+    description: activity.description ?? activity.tagline,
+    path: `/activites/${slug}`,
+    image: activity.image?.asset?.url,
+  });
 }
 
 export default async function ActivityPage({

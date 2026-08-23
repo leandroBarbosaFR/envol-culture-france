@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import Image from 'next/image';
 import { Heart, Users, Sparkle, Medal } from '@phosphor-icons/react/ssr';
 import { PageHeader } from '@/components/page-header';
@@ -10,10 +11,11 @@ const ICONS = [Heart, Users, Sparkle, Medal];
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = (await sanityFetch({ query: aboutPageQuery })).data;
-  return {
-    title: `${data?.intro?.title ?? 'Qui sommes-nous'} · Envol Culture en France`,
+  return buildMetadata({
+    title: data?.intro?.title ?? 'Qui sommes-nous',
     description: data?.intro?.description,
-  };
+    path: '/about',
+  });
 }
 
 export default async function AboutPage() {

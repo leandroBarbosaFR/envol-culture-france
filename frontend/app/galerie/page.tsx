@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import { GalleryGrid, type GalleryItem } from '@/components/gallery-grid';
 import { PageHeader } from '@/components/page-header';
 import { downloadUrl, printableUrl, toFileName } from '@/lib/sanity/image';
@@ -19,10 +20,12 @@ function withImage(images: Photo[] | undefined): Photo[] {
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = (await sanityFetch({ query: galeriePageQuery })).data;
-  return {
-    title: `${data?.title ?? 'Galerie'} · Envol Culture en France`,
+  return buildMetadata({
+    title: data?.title ?? 'Galerie',
     description: data?.description,
-  };
+    path: '/galerie',
+    image: data?.images?.[0]?.image?.asset?.url,
+  });
 }
 
 export default async function GaleriePage() {

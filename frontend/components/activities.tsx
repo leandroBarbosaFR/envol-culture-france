@@ -1,6 +1,7 @@
 import { ArrowRight } from '@phosphor-icons/react/ssr';
 import { MediaCardOverlay } from '@/components/media-card-overlay';
 import Image from 'next/image';
+import { CarouselRow } from '@/components/carousel-row';
 import Link from 'next/link';
 
 type Activity = {
@@ -44,9 +45,9 @@ export function Activities({
           )}
         </div>
 
-        <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <CarouselRow label="Activités" className="mt-12">
           {activities.map((activity) => (
-            <li key={activity.slug}>
+            <li key={activity.slug} className="w-64 shrink-0 snap-start md:w-80">
               <Link
                 href={`/activites/${activity.slug}`}
                 className="group relative block aspect-[4/5] overflow-hidden rounded-lg bg-muted"
@@ -70,7 +71,7 @@ export function Activities({
               </Link>
             </li>
           ))}
-        </ul>
+        </CarouselRow>
       </div>
     </section>
   );

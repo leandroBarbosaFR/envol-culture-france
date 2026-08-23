@@ -8,9 +8,10 @@ import { cn } from '@/lib/utils';
  * Shared on purpose: when each section rolled its own, the colour, easing and
  * call-to-action style drifted apart. Change it here and both stay in step.
  *
- * The 90% tint is the most transparent this can go: over a white photo it
- * leaves white text at 4.61:1, and 89% drops to 4.49 — under the 4.5 WCAG AA
- * floor. Lower it and the body copy stops being legible on pale images.
+ * The tint is 75% so the photo reads through. On flat colour alone that sits
+ * under the 4.5 WCAG AA floor over a pale image (90% was the break-even point),
+ * so the text carries a shadow to hold its edge against bright backgrounds.
+ * If contrast matters more than translucency here, raise the tint back to 90.
  */
 export function MediaCardOverlay({
   title,
@@ -42,7 +43,7 @@ export function MediaCardOverlay({
   return (
     <div
       className={cn(
-        'absolute inset-x-0 top-0 overflow-hidden bg-brand-deep/90',
+        'absolute inset-x-0 top-0 overflow-hidden bg-brand-deep/75',
         // Purely decorative: it must never intercept clicks meant for the
         // card underneath (the gallery opens a lightbox from there).
         'pointer-events-none',
@@ -67,7 +68,9 @@ export function MediaCardOverlay({
             ),
       )}
     >
-      <div className="flex h-full flex-col p-5 text-background">
+      <div
+        className="flex h-full flex-col p-5 text-background [text-shadow:0_1px_3px_rgb(0_0_0/0.45)]"
+      >
         <h3 className="font-heading text-lg font-medium leading-snug">{title}</h3>
 
         {/*

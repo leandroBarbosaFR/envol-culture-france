@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import { ContactChannels } from '@/components/contact-channels';
 import { Field } from '@/components/form-field';
 import { PageHeader } from '@/components/page-header';
@@ -9,10 +10,11 @@ import { contactPageQuery } from '@/lib/sanity/queries';
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = (await sanityFetch({ query: contactPageQuery })).data;
-  return {
-    title: `${data?.info?.title ?? 'Contact'} · Envol Culture en France`,
+  return buildMetadata({
+    title: data?.info?.title ?? 'Contact',
     description: data?.info?.description,
-  };
+    path: '/contact',
+  });
 }
 
 export default async function ContactPage() {

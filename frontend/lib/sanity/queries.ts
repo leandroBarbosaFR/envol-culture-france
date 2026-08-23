@@ -93,6 +93,21 @@ export const seoGlobalQuery = groq`
   *[_type == "pageSeo" && _id == "seoGlobal"][0] {
     metaTitle,
     metaDescription,
+    "shareImage": shareImage.asset->url,
+  }
+`;
+
+// ── Sitemap ─────────────────────────────────────────────────────────────────
+export const sitemapQuery = groq`
+  {
+    "activities": *[_type == "activity" && defined(slug.current)] {
+      "slug": slug.current,
+      _updatedAt
+    },
+    "news": *[_type == "newsPost" && defined(slug.current)] {
+      "slug": slug.current,
+      _updatedAt
+    }
   }
 `;
 
