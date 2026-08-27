@@ -11,20 +11,38 @@ type Photo = {
   image?: { asset?: { url?: string } };
 };
 
+type Album = {
+  slug: string;
+  title: string;
+  images?: Photo[];
+};
+
 type GalleryStripProps = {
   eyebrow?: string;
   title?: string;
   linkLabel?: string;
-  photos?: Photo[];
+  albums?: Album[];
 };
+
+/**
+ * A few photos from each of the most recent albums, in album order, each one
+ * linking back to the album it came from rather than to the index.
+ */
+function pickPhotos(albums: Album[]) {
+  return albums.flatMap((album) =>
+    (album.images ?? [])
+      .filter((photo) => photo.image?.asset?.url)
+      .map((photo) => ({ photo, album })),
+  );
+}
 
 export function GalleryStrip({
   eyebrow,
   title,
   linkLabel,
-  photos = [],
+  albums = [],
 }: GalleryStripProps) {
-  const shown = photos.filter((photo) => photo.image?.asset?.url);
+  const shown = pickPhotos(albums);
   if (shown.length === 0) return null;
 
   // The `homeGallerySection` singleton may not exist yet; without these the
@@ -51,10 +69,10 @@ export function GalleryStrip({
         </div>
 
         <CarouselRow label="Galerie" className="mt-12">
-        {shown.map((photo) => (
-          <li key={photo._key} className="w-56 shrink-0 snap-start md:w-64">
+        {shown.map(({ photo, album }) => (
+          <li key={`${album.slug}-${photo._key}`} className="w-56 shrink-0 snap-start md:w-64">
             <Link
-              href="/galerie"
+              href={`/galerie/${album.slug}`}
               className="group relative block aspect-square overflow-hidden rounded-lg bg-muted"
             >
               <Image
@@ -66,7 +84,8 @@ export function GalleryStrip({
               />
               <MediaCardOverlay
                 title={photo.caption ?? photo.alt ?? 'Photo'}
-                cta="Voir"
+                meta={album.title}
+                cta="Voir l'album"
                 reveal="corner"
               />
             </Link>

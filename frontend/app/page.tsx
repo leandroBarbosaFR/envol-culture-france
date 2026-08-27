@@ -29,7 +29,7 @@ export default async function HomePage() {
         eyebrow={data?.galleryIntro?.eyebrow}
         title={data?.galleryIntro?.title}
         linkLabel={data?.galleryIntro?.linkLabel}
-        photos={data?.galleryImages}
+        albums={data?.galleryAlbums}
       />
     </>
   );

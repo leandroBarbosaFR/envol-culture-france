@@ -5,6 +5,8 @@ export const galeriePage = defineType({
   name: 'galeriePage',
   title: 'Page Galerie',
   type: 'document',
+  description:
+    'En-tête de la page qui liste les albums. Les photos se gèrent dans « Albums photo ».',
   fields: [
     defineField({
       name: 'eyebrow',
@@ -22,14 +24,6 @@ export const galeriePage = defineType({
       title: 'Description',
       type: 'text',
       rows: 3,
-    }),
-    defineField({
-      name: 'images',
-      title: 'Photos',
-      type: 'array',
-      of: [{type: 'galleryImage'}],
-      options: {layout: 'grid'},
-      description: "Glissez-déposez les photos pour changer l'ordre d'affichage.",
     }),
   ],
 })

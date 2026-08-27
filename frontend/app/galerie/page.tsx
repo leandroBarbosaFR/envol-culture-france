@@ -1,21 +1,27 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo';
-import { GalleryGrid, type GalleryItem } from '@/components/gallery-grid';
+import { MediaCardOverlay } from '@/components/media-card-overlay';
 import { PageHeader } from '@/components/page-header';
-import { downloadUrl, printableUrl, toFileName } from '@/lib/sanity/image';
+import { formatFrenchDate, formatPhotoCount } from '@/lib/date';
 import { sanityFetch } from '@/lib/sanity/live';
 import { galeriePageQuery } from '@/lib/sanity/queries';
 
-type Photo = {
-  _key: string;
-  alt?: string;
-  caption?: string;
-  image?: { asset?: { url?: string } };
+type Album = {
+  _id: string;
+  title: string;
+  slug: string;
+  date?: string;
+  description?: string;
+  photoCount?: number;
+  cover?: { asset?: { url?: string } };
+  coverAlt?: string;
 };
 
-/** Drops entries whose image was never uploaded, so the grid has no holes. */
-function withImage(images: Photo[] | undefined): Photo[] {
-  return (images ?? []).filter((photo) => photo.image?.asset?.url);
+/** An album with no cover and no photos would render as an empty grey box. */
+function withCover(albums: Album[] | undefined): Album[] {
+  return (albums ?? []).filter((album) => album.cover?.asset?.url);
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,25 +30,13 @@ export async function generateMetadata(): Promise<Metadata> {
     title: data?.title ?? 'Galerie',
     description: data?.description,
     path: '/galerie',
-    image: data?.images?.[0]?.image?.asset?.url,
+    image: withCover(data?.albums)[0]?.cover?.asset?.url,
   });
 }
 
 export default async function GaleriePage() {
   const data = (await sanityFetch({ query: galeriePageQuery })).data;
-  const photos = withImage(data?.images);
-  const items: GalleryItem[] = photos.map((photo) => {
-    const url = photo.image!.asset!.url!;
-    const caption = photo.caption ?? photo.alt ?? 'Photo';
-    return {
-      key: photo._key,
-      url,
-      alt: photo.alt ?? '',
-      caption,
-      printUrl: printableUrl(url),
-      downloadHref: downloadUrl(url, toFileName(photo.caption ?? photo.alt)),
-    };
-  });
+  const albums = withCover(data?.albums);
 
   return (
     <>
@@ -55,12 +49,38 @@ export default async function GaleriePage() {
 
       <section className="bg-background">
         <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-          {photos.length === 0 ? (
+          {albums.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Les photos seront bientôt mises en ligne.
+              Les albums photo seront bientôt mis en ligne.
             </p>
           ) : (
-            <GalleryGrid items={items} />
+            <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {albums.map((album) => (
+                <li key={album._id}>
+                  <Link
+                    href={`/galerie/${album.slug}`}
+                    className="group relative block aspect-[3/2] overflow-hidden rounded-lg bg-muted"
+                  >
+                    <Image
+                      src={album.cover!.asset!.url!}
+                      alt={album.coverAlt ?? album.title}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none"
+                    />
+                    <MediaCardOverlay
+                      title={album.title}
+                      meta={[formatFrenchDate(album.date), formatPhotoCount(album.photoCount)]
+                        .filter(Boolean)
+                        .join(' · ')}
+                      body={album.description}
+                      cta="Voir l'album"
+                      bandHeight="h-0"
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </section>

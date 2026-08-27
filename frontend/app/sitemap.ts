@@ -25,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const activities: Entry[] = data?.activities ?? [];
   const news: Entry[] = data?.news ?? [];
+  const albums: Entry[] = data?.albums ?? [];
 
   return [
     ...STATIC_ROUTES.map((route) => ({
@@ -44,6 +45,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(n._updatedAt),
       changeFrequency: 'yearly' as const,
       priority: 0.6,
+    })),
+    ...albums.map((a) => ({
+      url: absoluteUrl(`/galerie/${a.slug}`),
+      lastModified: new Date(a._updatedAt),
+      changeFrequency: 'yearly' as const,
+      priority: 0.5,
     })),
   ];
 }

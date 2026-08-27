@@ -6,6 +6,7 @@ import {activity} from './documents/activity'
 import {actualitesPage} from './documents/actualitesPage'
 import {contactPageForm} from './documents/contactPageForm'
 import {galeriePage} from './documents/galeriePage'
+import {galleryAlbum} from './documents/galleryAlbum'
 import {cookieBanner} from './documents/cookieBanner'
 import {contactPageInfo} from './documents/contactPageInfo'
 import {heroSection} from './documents/heroSection'
@@ -58,6 +59,7 @@ export const schemaTypes = [
 
   // documents — collections
   activity,
+  galleryAlbum,
   newsPost,
 
   // documents — global

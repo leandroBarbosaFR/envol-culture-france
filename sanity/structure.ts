@@ -184,6 +184,13 @@ export const structure: StructureResolver = (S) =>
               S.listItem()
                 .title('Contenu de la page')
                 .child(S.editor().schemaType('galeriePage').documentId('galeriePage')),
+              S.listItem()
+                .title('Albums photo')
+                .child(
+                  S.documentTypeList('galleryAlbum')
+                    .title('Albums photo')
+                    .defaultOrdering([{field: 'date', direction: 'desc'}]),
+                ),
             ]),
         ),
 

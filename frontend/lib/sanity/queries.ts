@@ -30,19 +30,54 @@ export const siteFooterQuery = groq`
   }
 `;
 
-// ── Galerie ─────────────────────────────────────────────────────────────────
+// ── Galerie — index des albums ──────────────────────────────────────────────
 export const galeriePageQuery = groq`
   *[_type == "galeriePage"][0] {
     eyebrow,
     title,
+    description,
+    "albums": *[_type == "galleryAlbum" && defined(slug.current)]
+      | order(coalesce(date, _createdAt) desc) {
+        _id,
+        title,
+        "slug": slug.current,
+        date,
+        description,
+        "photoCount": count(images),
+        "cover": coalesce(coverImage, images[0].image) { asset->{ url } },
+        "coverAlt": coalesce(images[0].alt, title)
+      }
+  }
+`;
+
+// ── Album par slug ──────────────────────────────────────────────────────────
+export const galleryAlbumBySlugQuery = groq`
+  *[_type == "galleryAlbum" && slug.current == $slug][0] {
+    title,
+    "slug": slug.current,
+    date,
     description,
     images[] {
       _key,
       alt,
       caption,
       image { asset->{ url } }
-    }
+    },
+    "otherAlbums": *[_type == "galleryAlbum" && defined(slug.current) && slug.current != $slug]
+      | order(coalesce(date, _createdAt) desc) [0...3] {
+        _id,
+        title,
+        "slug": slug.current,
+        date,
+        "photoCount": count(images),
+        "cover": coalesce(coverImage, images[0].image) { asset->{ url } }
+      }
   }
+`;
+
+// ── Tous les slugs d'albums (generateStaticParams) ──────────────────────────
+export const galleryAlbumSlugsQuery = groq`
+  *[_type == "galleryAlbum" && defined(slug.current)] { "slug": slug.current }
 `;
 
 // ── Coordonnées (source unique : pied de page, contact, accueil) ─────────────
@@ -107,6 +142,10 @@ export const sitemapQuery = groq`
     "news": *[_type == "newsPost" && defined(slug.current)] {
       "slug": slug.current,
       _updatedAt
+    },
+    "albums": *[_type == "galleryAlbum" && defined(slug.current)] {
+      "slug": slug.current,
+      _updatedAt
     }
   }
 `;
@@ -150,12 +189,17 @@ export const homePageQuery = groq`
       title,
       linkLabel,
     },
-    "galleryImages": *[_type == "galeriePage"][0].images[0...8] {
-      _key,
-      alt,
-      caption,
-      image { asset->{ url } }
-    },
+    "galleryAlbums": *[_type == "galleryAlbum" && defined(slug.current)]
+      | order(coalesce(date, _createdAt) desc) [0...4] {
+        "slug": slug.current,
+        title,
+        images[0...4] {
+          _key,
+          alt,
+          caption,
+          image { asset->{ url } }
+        }
+      },
     "recentNews": *[_type == "newsPost"] | order(date desc) [0...3] {
       title,
       "slug": slug.current,
