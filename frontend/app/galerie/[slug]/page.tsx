@@ -7,7 +7,9 @@ import { GalleryGrid, type GalleryItem } from '@/components/gallery-grid';
 import { MediaCardOverlay } from '@/components/media-card-overlay';
 import { PageHeader } from '@/components/page-header';
 import { formatFrenchDate, formatPhotoCount } from '@/lib/date';
+import { JsonLd } from '@/components/json-ld';
 import { buildMetadata } from '@/lib/seo';
+import { absoluteUrl } from '@/lib/site';
 import { client } from '@/lib/sanity/client';
 import { downloadUrl, printableUrl, toFileName } from '@/lib/sanity/image';
 import { sanityFetch } from '@/lib/sanity/live';
@@ -36,6 +38,19 @@ function withImage(images: Photo[] | undefined): Photo[] {
   return (images ?? []).filter((photo) => photo.image?.asset?.url);
 }
 
+/** Stands in for an empty album description, in the page's own words. */
+function albumSummary(title: string, date: string | undefined, count: number): string {
+  const when = formatFrenchDate(date);
+  const photos = formatPhotoCount(count);
+  return [
+    `${photos ?? 'Les photos'} de « ${title} »`,
+    when ? `du ${when}` : null,
+    '— association Envol Culture en France, Roquefort-la-Bédoule.',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
 export async function generateStaticParams(): Promise<Params[]> {
   const albums = await client.withConfig({ useCdn: false }).fetch(galleryAlbumSlugsQuery);
   return albums.map(({ slug }: { slug: string }) => ({ slug }));
@@ -52,11 +67,14 @@ export async function generateMetadata({
     params: { slug },
   });
   if (!album) return {};
+  const photos = withImage(album.images);
   return buildMetadata({
     title: album.title,
-    description: album.description,
+    // An album often carries no description. Rather than ship a page with no
+    // meta description at all, describe what is actually on it.
+    description: album.description || albumSummary(album.title, album.date, photos.length),
     path: `/galerie/${slug}`,
-    image: withImage(album.images)[0]?.image?.asset?.url,
+    image: photos[0]?.image?.asset?.url,
   });
 }
 
@@ -90,8 +108,34 @@ export default async function GalleryAlbumPage({
     .filter(Boolean)
     .join(' · ');
 
+  /*
+    Google Images cannot index what it only sees through Next's image
+    optimiser, so every photo is listed here by its crawlable CDN URL, with
+    the alt text as its description. Same URLs as the image sitemap.
+  */
+  const gallery = {
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    name: album.title,
+    description: album.description || albumSummary(album.title, album.date, photos.length),
+    url: absoluteUrl(`/galerie/${album.slug}`),
+    datePublished: album.date || undefined,
+    isPartOf: {
+      '@type': 'CollectionPage',
+      name: 'Galerie',
+      url: absoluteUrl('/galerie'),
+    },
+    associatedMedia: items.map((item) => ({
+      '@type': 'ImageObject',
+      contentUrl: item.url,
+      name: item.caption,
+      description: item.alt || item.caption,
+    })),
+  };
+
   return (
     <>
+      <JsonLd data={gallery} />
       <PageHeader
         eyebrow={eyebrow || undefined}
         title={album.title}

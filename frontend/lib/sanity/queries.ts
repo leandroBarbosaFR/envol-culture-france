@@ -133,20 +133,27 @@ export const seoGlobalQuery = groq`
 `;
 
 // ── Sitemap ─────────────────────────────────────────────────────────────────
+// `images` feeds Google's image sitemap extension: the photos are served
+// through Next's optimiser, so the crawlable CDN URL is the only reliable
+// address Google Images can index them by.
 export const sitemapQuery = groq`
   {
     "activities": *[_type == "activity" && defined(slug.current)] {
       "slug": slug.current,
-      _updatedAt
+      _updatedAt,
+      "images": [image.asset->url]
     },
     "news": *[_type == "newsPost" && defined(slug.current)] {
       "slug": slug.current,
-      _updatedAt
+      _updatedAt,
+      "images": [image.asset->url]
     },
     "albums": *[_type == "galleryAlbum" && defined(slug.current)] {
       "slug": slug.current,
-      _updatedAt
-    }
+      _updatedAt,
+      "images": images[defined(image.asset)].image.asset->url
+    },
+    "galleryUpdatedAt": *[_type == "galleryAlbum"] | order(_updatedAt desc) [0]._updatedAt
   }
 `;
 

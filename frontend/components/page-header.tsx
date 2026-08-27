@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { CaretRight } from '@phosphor-icons/react/ssr';
+import { JsonLd } from '@/components/json-ld';
+import { absoluteUrl } from '@/lib/site';
 
 export type Crumb = { href: string; label: string };
 
@@ -19,8 +21,29 @@ export function PageHeader({
   crumbs,
   badge,
 }: PageHeaderProps) {
+  /*
+    The visible trail and the one Google reads come from the same `crumbs`,
+    so the breadcrumb shown in search results can never drift from the page.
+    Emitted here rather than per page: every section already passes crumbs.
+  */
+  const breadcrumbs = crumbs?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [{ href: '/', label: 'Accueil' }, ...crumbs].map(
+          (crumb, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: crumb.label,
+            item: absoluteUrl(crumb.href),
+          }),
+        ),
+      }
+    : null;
+
   return (
     <section className="border-b border-border bg-brand-soft/40 print:border-0 print:bg-transparent">
+      {breadcrumbs ? <JsonLd data={breadcrumbs} /> : null}
       <div className="mx-auto max-w-6xl px-4 pt-28 pb-14 md:px-6 md:pt-32 md:pb-20 print:max-w-none print:px-0 print:pt-0 print:pb-4">
         {crumbs && crumbs.length > 0 ? (
           <nav className="mb-6 flex items-center gap-1 text-sm text-muted-foreground print:hidden">

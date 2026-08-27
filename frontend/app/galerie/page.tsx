@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo';
 import { MediaCardOverlay } from '@/components/media-card-overlay';
 import { PageHeader } from '@/components/page-header';
+import { JsonLd } from '@/components/json-ld';
 import { formatFrenchDate, formatPhotoCount } from '@/lib/date';
+import { absoluteUrl } from '@/lib/site';
 import { sanityFetch } from '@/lib/sanity/live';
 import { galeriePageQuery } from '@/lib/sanity/queries';
 
@@ -38,8 +40,32 @@ export default async function GaleriePage() {
   const data = (await sanityFetch({ query: galeriePageQuery })).data;
   const albums = withCover(data?.albums);
 
+  /*
+    The photos used to all live on this one page. Now that each album is its
+    own URL, this list is what tells Google the album pages exist and how they
+    relate — the crawler should not have to infer the set from the markup.
+  */
+  const collection = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: data?.title ?? 'Galerie',
+    description: data?.description || undefined,
+    url: absoluteUrl('/galerie'),
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: albums.length,
+      itemListElement: albums.map((album, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: album.title,
+        url: absoluteUrl(`/galerie/${album.slug}`),
+      })),
+    },
+  };
+
   return (
     <>
+      <JsonLd data={collection} />
       <PageHeader
         eyebrow={data?.eyebrow}
         title={data?.title ?? 'Galerie'}
