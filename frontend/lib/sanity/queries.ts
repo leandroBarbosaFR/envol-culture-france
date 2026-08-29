@@ -44,7 +44,7 @@ export const galeriePageQuery = groq`
         date,
         description,
         "photoCount": count(images),
-        "cover": coalesce(coverImage, images[0].image) { asset->{ url } },
+        "cover": coalesce(coverImage, images[0]) { asset->{ url } },
         "coverAlt": coalesce(images[0].alt, title)
       }
   }
@@ -61,7 +61,7 @@ export const galleryAlbumBySlugQuery = groq`
       _key,
       alt,
       caption,
-      image { asset->{ url } }
+      asset->{ url }
     },
     "otherAlbums": *[_type == "galleryAlbum" && defined(slug.current) && slug.current != $slug]
       | order(coalesce(date, _createdAt) desc) [0...3] {
@@ -70,7 +70,7 @@ export const galleryAlbumBySlugQuery = groq`
         "slug": slug.current,
         date,
         "photoCount": count(images),
-        "cover": coalesce(coverImage, images[0].image) { asset->{ url } }
+        "cover": coalesce(coverImage, images[0]) { asset->{ url } }
       }
   }
 `;
@@ -151,7 +151,7 @@ export const sitemapQuery = groq`
     "albums": *[_type == "galleryAlbum" && defined(slug.current)] {
       "slug": slug.current,
       _updatedAt,
-      "images": images[defined(image.asset)].image.asset->url
+      "images": images[defined(asset)].asset->url
     },
     "galleryUpdatedAt": *[_type == "galleryAlbum"] | order(_updatedAt desc) [0]._updatedAt
   }
@@ -204,7 +204,7 @@ export const homePageQuery = groq`
           _key,
           alt,
           caption,
-          image { asset->{ url } }
+          asset->{ url }
         }
       },
     "recentNews": *[_type == "newsPost"] | order(date desc) [0...3] {

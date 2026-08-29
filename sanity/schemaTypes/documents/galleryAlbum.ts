@@ -1,5 +1,6 @@
 // sanity/schemaTypes/documents/galleryAlbum.ts
 import {defineType, defineField} from 'sanity'
+import {MultiPhotoInput} from '../../components/MultiPhotoInput'
 
 export const galleryAlbum = defineType({
   name: 'galleryAlbum',
@@ -49,7 +50,11 @@ export const galleryAlbum = defineType({
       type: 'array',
       of: [{type: 'galleryImage'}],
       options: {layout: 'grid'},
-      description: 'Glissez-déposez les photos pour changer l’ordre d’affichage.',
+      components: {input: MultiPhotoInput},
+      description:
+        'Utilisez « Ajouter plusieurs photos » pour en importer un lot d’un '+
+        'seul coup, ou déposez directement une sélection de fichiers ici. '+
+        'Glissez-déposez les vignettes pour changer l’ordre d’affichage.',
     }),
   ],
   orderings: [
@@ -69,7 +74,7 @@ export const galleryAlbum = defineType({
       title: 'title',
       date: 'date',
       cover: 'coverImage',
-      firstPhoto: 'images.0.image',
+      firstPhoto: 'images.0',
       images: 'images',
     },
     prepare({title, date, cover, firstPhoto, images}) {

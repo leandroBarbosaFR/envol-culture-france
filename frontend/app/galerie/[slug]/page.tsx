@@ -21,7 +21,7 @@ type Photo = {
   _key: string;
   alt?: string;
   caption?: string;
-  image?: { asset?: { url?: string } };
+  asset?: { url?: string };
 };
 
 type OtherAlbum = {
@@ -35,7 +35,7 @@ type OtherAlbum = {
 
 /** Drops entries whose image was never uploaded, so the grid has no holes. */
 function withImage(images: Photo[] | undefined): Photo[] {
-  return (images ?? []).filter((photo) => photo.image?.asset?.url);
+  return (images ?? []).filter((photo) => photo.asset?.url);
 }
 
 /** Stands in for an empty album description, in the page's own words. */
@@ -74,7 +74,7 @@ export async function generateMetadata({
     // meta description at all, describe what is actually on it.
     description: album.description || albumSummary(album.title, album.date, photos.length),
     path: `/galerie/${slug}`,
-    image: photos[0]?.image?.asset?.url,
+    image: photos[0]?.asset?.url,
   });
 }
 
@@ -92,12 +92,15 @@ export default async function GalleryAlbumPage({
 
   const photos = withImage(album.images);
   const items: GalleryItem[] = photos.map((photo) => {
-    const url = photo.image!.asset!.url!;
-    const caption = photo.caption ?? photo.alt ?? 'Photo';
+    const url = photo.asset!.url!;
+    // Un import en lot laisse souvent le texte alternatif vide : le titre de
+    // l'album vaut mieux qu'un alt="" pour un lecteur d'écran comme pour Google.
+    const alt = photo.alt || album.title;
+    const caption = photo.caption ?? photo.alt ?? album.title;
     return {
       key: photo._key,
       url,
-      alt: photo.alt ?? '',
+      alt,
       caption,
       printUrl: printableUrl(url),
       downloadHref: downloadUrl(url, toFileName(photo.caption ?? photo.alt)),

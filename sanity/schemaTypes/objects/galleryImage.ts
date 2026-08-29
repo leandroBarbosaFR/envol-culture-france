@@ -1,17 +1,18 @@
 import {defineType, defineField} from 'sanity'
 
+/*
+  Déclaré comme `image` — et non comme un objet contenant une image — pour que
+  le Studio accepte plusieurs fichiers d'un coup : glisser-déposer d'une
+  sélection entière, ou « Select » avec sélection multiple dans la médiathèque.
+  Un objet enveloppant l'image force l'ajout photo par photo.
+  Le texte alternatif et la légende s'éditent via le crayon sur la vignette.
+*/
 export const galleryImage = defineType({
   name: 'galleryImage',
   title: 'Photo',
-  type: 'object',
+  type: 'image',
+  options: {hotspot: true},
   fields: [
-    defineField({
-      name: 'image',
-      title: 'Image',
-      type: 'image',
-      options: {hotspot: true},
-      validation: (R) => R.required(),
-    }),
     defineField({
       name: 'alt',
       title: 'Texte alternatif',
@@ -19,7 +20,10 @@ export const galleryImage = defineType({
       description:
         "Décrit la photo pour les personnes qui utilisent un lecteur d'écran. " +
         'Ex : « Atelier de peinture, séance du mercredi ».',
-      validation: (R) => R.required(),
+      // Avertissement plutôt qu'erreur : après un import de 40 photos, une règle
+      // bloquante empêcherait toute publication tant que les 40 textes ne sont
+      // pas saisis. Le Studio signale les photos sans texte, sans bloquer.
+      validation: (R) => R.required().warning('Ajoutez un texte alternatif pour l’accessibilité.'),
     }),
     defineField({
       name: 'caption',
@@ -29,6 +33,6 @@ export const galleryImage = defineType({
     }),
   ],
   preview: {
-    select: {title: 'alt', subtitle: 'caption', media: 'image'},
+    select: {title: 'alt', subtitle: 'caption', media: 'asset'},
   },
 })

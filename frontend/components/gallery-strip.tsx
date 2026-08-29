@@ -8,7 +8,7 @@ type Photo = {
   _key: string;
   alt?: string;
   caption?: string;
-  image?: { asset?: { url?: string } };
+  asset?: { url?: string };
 };
 
 type Album = {
@@ -31,7 +31,7 @@ type GalleryStripProps = {
 function pickPhotos(albums: Album[]) {
   return albums.flatMap((album) =>
     (album.images ?? [])
-      .filter((photo) => photo.image?.asset?.url)
+      .filter((photo) => photo.asset?.url)
       .map((photo) => ({ photo, album })),
   );
 }
@@ -76,14 +76,14 @@ export function GalleryStrip({
               className="group relative block aspect-square overflow-hidden rounded-lg bg-muted"
             >
               <Image
-                src={photo.image!.asset!.url!}
-                alt={photo.alt ?? ''}
+                src={photo.asset!.url!}
+                alt={photo.alt || album.title}
                 fill
                 sizes="256px"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none"
               />
               <MediaCardOverlay
-                title={photo.caption ?? photo.alt ?? 'Photo'}
+                title={photo.caption ?? photo.alt ?? album.title}
                 meta={album.title}
                 cta="Voir l'album"
                 reveal="corner"
