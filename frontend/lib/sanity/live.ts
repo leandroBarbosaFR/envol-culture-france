@@ -24,7 +24,20 @@ type SanityFetchOptions = {
   query: string;
   params?: QueryParams;
   stega?: boolean;
+  tags?: string[];
 };
+
+/**
+ * Cache tag attached to every query below, so the Sanity webhook route
+ * (`app/api/revalidate`) can expire all cached content in a single call.
+ *
+ * It is the safety net under `<SanityLive />`: the live stream can only
+ * revalidate while a browser is actually connected to the site, and
+ * `sanityFetch` caches with `revalidate: false` (no time-based expiry). Publish
+ * from the Studio with nobody on the site — the normal case — and the
+ * prerendered page would otherwise stay stale until the next deploy.
+ */
+export const CONTENT_TAG = 'sanity-content';
 
 /**
  * `liveFetch` resolves its result type through `ClientReturn`, which needs
@@ -36,7 +49,11 @@ type SanityFetchOptions = {
  * Drop it once queries move to `defineQuery` + `sanity typegen generate`,
  * which gives real result types instead of `any`.
  */
-export const sanityFetch = liveFetch as (
+const typedFetch = liveFetch as (
   options: SanityFetchOptions,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) => Promise<{ data: any }>;
+
+export function sanityFetch(options: SanityFetchOptions) {
+  return typedFetch({ ...options, tags: [CONTENT_TAG, ...(options.tags ?? [])] });
+}
