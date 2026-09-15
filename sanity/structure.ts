@@ -53,6 +53,13 @@ export const structure: StructureResolver = (S) =>
                 ),
               S.divider(),
               S.listItem()
+                .title("Bandeau d'annonce")
+                .child(
+                  S.editor()
+                    .schemaType('announcementBanner')
+                    .documentId('announcementBanner'),
+                ),
+              S.listItem()
                 .title("Bannière d'accueil")
                 .child(S.editor().schemaType('heroSection').documentId('heroSection')),
               S.listItem()

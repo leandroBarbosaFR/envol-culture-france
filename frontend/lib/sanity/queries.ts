@@ -123,6 +123,16 @@ export const cookieBannerQuery = groq`
   }
 `;
 
+// ── Bandeau d'annonce ────────────────────────────────────────────────────────
+export const announcementBannerQuery = groq`
+  *[_type == "announcementBanner"][0] {
+    active,
+    text,
+    startDate,
+    endDate
+  }
+`;
+
 // ── SEO Global ───────────────────────────────────────────────────────────────
 export const seoGlobalQuery = groq`
   *[_type == "pageSeo" && _id == "seoGlobal"][0] {

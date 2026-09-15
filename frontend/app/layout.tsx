@@ -5,11 +5,13 @@ import { SiteFooter } from '@/components/site-footer';
 import { CookieConsent } from '@/components/cookie-consent';
 import { sanityFetch, SanityLive } from '@/lib/sanity/live';
 import { absoluteUrl, siteUrl } from '@/lib/site';
+import { resolveAnnouncementText } from '@/components/announcement-banner';
 import {
   siteHeaderQuery,
   siteFooterQuery,
   siteContactQuery,
   cookieBannerQuery,
+  announcementBannerQuery,
   seoGlobalQuery,
 } from '@/lib/sanity/queries';
 import './globals.css';
@@ -80,12 +82,15 @@ export default async function RootLayout({
     { data: footer },
     { data: contact },
     { data: cookieBanner },
+    { data: announcement },
   ] = await Promise.all([
     sanityFetch({ query: siteHeaderQuery }),
     sanityFetch({ query: siteFooterQuery }),
     sanityFetch({ query: siteContactQuery }),
     sanityFetch({ query: cookieBannerQuery }),
+    sanityFetch({ query: announcementBannerQuery }),
   ]);
+  const announcementText = resolveAnnouncementText(announcement);
 
   return (
     <html
@@ -120,7 +125,7 @@ export default async function RootLayout({
             }),
           }}
         />
-        <SiteHeader header={header} />
+        <SiteHeader header={header} announcementText={announcementText} />
         <main className="flex-1">{children}</main>
         <SiteFooter
           footer={footer}

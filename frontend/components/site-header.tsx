@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ArrowRight, List, X } from '@phosphor-icons/react/ssr';
 import { LogoEnvol } from '@/components/logo-envol';
+import { AnnouncementBanner } from '@/components/announcement-banner';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -23,8 +25,16 @@ const NAV_LINK =
 
 const BAR = 'rounded-lg border border-border bg-background/95 shadow-sm';
 
-export function SiteHeader({ header }: { header?: HeaderProps }) {
+export function SiteHeader({
+  header,
+  announcementText,
+}: {
+  header?: HeaderProps;
+  announcementText?: string | null;
+}) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const showAnnouncement = pathname === '/' && !!announcementText;
 
   const siteName = header?.siteName ?? 'Envol Culture';
   const navLinks = header?.navLinks ?? [];
@@ -51,6 +61,7 @@ export function SiteHeader({ header }: { header?: HeaderProps }) {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 print:hidden">
+        {showAnnouncement && <AnnouncementBanner text={announcementText!} />}
         <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-4 md:px-6">
           {/* Mobile */}
           <div className={`${BAR} flex w-full items-center justify-between p-1.5 pl-4 lg:hidden`}>

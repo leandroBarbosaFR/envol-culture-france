@@ -71,6 +71,20 @@
   --radius: 2px;
 }
 
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 22s linear infinite;
+}
+
 @media print {
   @page {
     margin: 12mm;

@@ -4,6 +4,7 @@ import {aboutPageValues} from './documents/aboutPageValues'
 import {activitiesPage} from './documents/activitiesPage'
 import {activity} from './documents/activity'
 import {actualitesPage} from './documents/actualitesPage'
+import {announcementBanner} from './documents/announcementBanner'
 import {contactPageForm} from './documents/contactPageForm'
 import {galeriePage} from './documents/galeriePage'
 import {galleryAlbum} from './documents/galleryAlbum'
@@ -63,6 +64,7 @@ export const schemaTypes = [
   newsPost,
 
   // documents — global
+  announcementBanner,
   cookieBanner,
   legalPage,
   pageSeo,
